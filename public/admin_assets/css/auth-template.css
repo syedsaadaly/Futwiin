@@ -1,0 +1,305 @@
+.register-box .card {
+    box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+    margin-bottom: 1rem;
+}
+body {
+    background-position: center center !important;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/admin_assets/images/background.jpg) no-repeat !important;
+    background-color: transparent !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    min-width: 0;
+    color: #3c434a;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.login-custom {
+    border-radius:  10px;
+    margin-top: 20px;
+    margin-left: 0;
+    padding: 26px 24px;
+    font-weight: 400;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+}
+.logo-login{
+    color: #3c434a;
+    height: 34px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.3;
+    padding: 0;
+    text-decoration: none;
+    width: 100%;
+    text-indent: -9999px;
+    outline: 0;
+    overflow: hidden;
+    display: block;
+}
+.login-box{
+    width: 405px;
+    margin: auto;
+}
+.login-box .btn-primary {
+    background: #FFB706;
+    border-color: #FFB706;
+}
+.login-box .login-forget{
+    margin: 24px 0 0;
+    font-size: 13px;
+    padding: 0 24px;
+}
+.login-box .login-forget-register{
+    margin: 16px 0;
+    font-size: 13px;
+    padding: 0 24px;
+}
+.login-box .login-forget a, .login-box .login-forget-register a{
+    text-decoration: none;
+    color: #ffffff;
+}
+.register-page{
+    min-height: 100vh !important;
+    height: 100%;
+}
+
+.navbar-register{
+    min-height: 110px; 
+}
+.navbar-register img{
+    width: 400px;
+}
+.navbar-register a{
+    font-size: 14px;
+    margin: 0px 4px 0px 4px;
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 0.085em;
+    text-transform: uppercase;
+}
+.navbar-register a.active, .navbar-register #navbarNavDropdown a:hover{
+    background: #FFB706 !important;
+}
+.bg-pink{
+    background: #FFB706 !important;
+}
+.bg-pink h1{
+    font-size: 60px;
+    color: #ffffff;
+    text-align: left;
+    letter-spacing: 0.2;
+    line-height: 60px !important;
+}
+.welcome-league h3{
+    text-align: left;
+    font-size: 40px;
+    line-height: 51px;
+    text-align: left;
+    font-weight: 700;
+    margin-bottom: 35px;
+}
+.welcome-league p{
+    color: white;
+    font-size: 19px;
+    margin-bottom: 35px;
+}
+.welcome-league p a{
+    color: #FFB706;
+}
+.btn-submit {
+    padding: 14px 50px 14px 50px !important;
+    color: #ffffff;
+    border-color: hsla(200, 100%, 60%, 0);
+    background-color: #FFB706;
+    text-shadow: 0 0.075em 0.075em rgba(0, 0, 0, 0.5);
+    font-size: 1.4em;
+    border-radius: 0px;
+}
+.register-footer p{
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    padding: 0;
+}
+.register-footer p a{
+    color: white;
+}
+.navbar-dark {
+    background-color: transparent;
+    border:white;
+}
+.registration_form .card{
+	background: transparent;
+}
+.registration_form .card-body{
+	padding-top: 5px;
+}
+.registration_form .card h3{
+	color: #fff;
+	font-size: 35px;
+	margin-top: 0px;
+	margin-bottom: 10px;
+	font-weight: 700;
+}
+.registration_form .card-header{
+	border-bottom: 0px;
+	padding-bottom: 0px;
+}
+.registration_form .card-tools{
+	display: none;
+}
+.registration_form input, .registration_form select{
+    border-radius: 3px;
+    border: 2px solid #ddd;
+}
+.custom-control label, .custom-control p, .card small{
+	font-weight: 500 !important;
+	font-size: 14px;
+	color: white;
+
+}
+.fedex_success_address {
+    border: 1px solid #ec008c;
+}
+
+.fedex_success_address p {
+    margin-bottom: 0px;
+    color: #ffffff;
+}
+
+.fedex_error_address {
+    border: 1px solid #c91c1c;
+}
+
+.fedex_error_address p {
+    margin-bottom: 0px;
+    color: #c91c1c;
+}
+
+.suggested_address {
+    color: #ffffff !important;
+}
+.fav_api_loader {
+    text-align: center;
+}
+
+.fav_api_loader img {
+    width: 50px;
+}
+.suggested_address {
+    font-size: 15px;
+}
+
+.fedex_success_address, .fedex_error_address {
+    padding: 10px 20px;
+    width: 98.5%;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 3px;
+    flex-wrap: wrap;
+}
+.fedex_error_address p {
+    font-size: 16px;
+    font-weight: 400;
+    flex: 0 0 80%;
+    max-width: 80%;
+}
+.fedex_success_address p.suggested_address {
+    font-size: 17px !important;
+    font-weight: 600;
+}
+
+.fedex_success_address .fedex-address-useit-button,
+.fedex_error_address .fedex-address-useit-button{
+    background: #ec008c ;
+    color:#fff;
+    border: 0;
+    font-size: 17px;
+    padding: 8px 25px;
+    line-height: normal;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.fedex_success_address .fedex-address-useit-button:hover,
+.fedex_error_address .fedex-address-useit-button:hover{
+    background: #fff;
+    color:#000;
+}
+
+.signature {
+    background-color: #ffffff !important;
+    width: 300px !important;
+    height: 180px !important;
+}
+
+
+@media(width <= 600px){
+    .navbar-register img {
+        width: 300px;
+        height: 30px;
+    }
+    .navbar-register a {
+        font-size: 14px;
+        font-family: inherit;
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: 0.085em;
+        margin: 0 0 11px;
+        border: 1px solid;
+        padding: .75em .95em;
+        color: #fff;
+        background-color: transparent;
+        text-transform: uppercase;
+    }
+    .navbar-collapse{
+        width: 100%;
+    }
+    .navbar-toggler-icon{
+        height: 30px;
+        width: 32px;
+    }
+    .navbar-dark .navbar-toggler{
+        border: 0px;
+        box-shadow: none !important;
+    }
+    .bg-pink h1 {
+        font-size: 40px;
+        color: #ffffff;
+        text-align: left;
+        line-height: 40px !important;
+    }
+    .register-footer{
+        margin-top: 20px;
+    }
+    .logo-container{
+        width: 100%;
+    }
+}
+
+@media (min-width: 576px) {
+    .container, .container-sm {
+        max-width: 540px;
+    }
+}
+@media (min-width: 768px) {
+    .container, .container-md, .container-sm {
+        max-width: 720px;
+    }
+}
+@media (min-width: 992px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 960px;
+    }
+}
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1200px;
+    }
+}
