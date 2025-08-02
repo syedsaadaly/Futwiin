@@ -11,7 +11,7 @@
             <div class="card card-primary" data-aos="fade-up" data-aos-duration="1000">
                 <div class="card-header text-white pb-0" style="background-color: rgb(0, 0, 0);">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h1 style="font-size: 24px">
+                        <h1 style="font-size: 24px" class="page-heading">
                             {{ $pageData->pageName ?? 'Plans Management' }}
                         </h1>
                         <a href="{{ route('admin.plans.create') }}">

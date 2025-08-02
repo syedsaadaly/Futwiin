@@ -56,7 +56,10 @@ class Pridection extends Model implements Transformable, HasMedia
     {
         return $this->belongsTo(Team::class, 'team_2_id');
     }
-
+    public function league()
+    {
+        return $this->belongsTo(League::class, 'league_id');
+    }
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('prediction_images')
@@ -64,6 +67,10 @@ class Pridection extends Model implements Transformable, HasMedia
             ->useDisk('public');
     }
     public function predictionDetails()
+    {
+        return $this->hasMany(PredictionDetail::class, 'prediction_id');
+    }
+        public function details()
     {
         return $this->hasMany(PredictionDetail::class, 'prediction_id');
     }

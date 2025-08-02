@@ -38,5 +38,9 @@ class Plan extends Model implements Transformable
             }
         });
     }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 
 }

@@ -270,7 +270,7 @@
 <div class="wrapper px-xl-2">
     <div class="row">
         <div class="col-12">
-            <h2 class="main-title">Admin Dashboard</h2>
+            {{-- <h2 class="main-title">Admin Dashboard</h2> --}}
         </div>
     </div>
 
@@ -282,8 +282,8 @@
                 <div class="stat-content">
                     <div class="stat-text">
                         <div class="stat-title">Total Users</div>
-                        <div class="stat-value">{{ $stats['users'] }}</div>
-                        <div class="stat-footer">{{ $stats['active_users'] }} active</div>
+                        <div class="stat-value">{{ $stats['users'] ?? '-' }}</div>
+                        <div class="stat-footer">{{ $stats['active_users'] ?? '-' }} active</div>
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-users"></i>
@@ -298,8 +298,8 @@
                 <div class="stat-content">
                     <div class="stat-text">
                         <div class="stat-title">Subscription Plans</div>
-                        <div class="stat-value">{{ $stats['plans'] }}</div>
-                        <div class="stat-footer">{{ $stats['active_plans'] }} active</div>
+                        <div class="stat-value">{{ $stats['plans'] ?? '-' }}</div>
+                        <div class="stat-footer">{{ $stats['active_plans'] ?? '-' }} active</div>
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-credit-card"></i>
@@ -314,8 +314,8 @@
                 <div class="stat-content">
                     <div class="stat-text">
                         <div class="stat-title">Predictions</div>
-                        <div class="stat-value">{{ $stats['predictions'] }}</div>
-                        <div class="stat-footer">{{ $stats['upcoming_predictions'] }} upcoming</div>
+                        <div class="stat-value">{{ $stats['predictions'] ?? '-' }}</div>
+                        <div class="stat-footer">{{ $stats['upcoming_predictions'] ?? '-' }} upcoming</div>
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-chart-line"></i>
@@ -330,8 +330,8 @@
                 <div class="stat-content">
                     <div class="stat-text">
                         <div class="stat-title">Leagues</div>
-                        <div class="stat-value">{{ $stats['leagues'] }}</div>
-                        <div class="stat-footer">{{ $stats['active_leagues'] }} active</div>
+                        <div class="stat-value">{{ $stats['leagues'] ?? '-' }}</div>
+                        <div class="stat-footer">{{ $stats['active_leagues'] ?? '-' }} active</div>
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-trophy"></i>
@@ -346,7 +346,7 @@
                 <div class="stat-content">
                     <div class="stat-text">
                         <div class="stat-title">Teams</div>
-                        <div class="stat-value">{{ $stats['teams'] }}</div>
+                        <div class="stat-value">{{ $stats['teams'] ?? '-' }}</div>
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-tshirt"></i>
@@ -361,7 +361,7 @@
                 <div class="stat-content">
                     <div class="stat-text">
                         <div class="stat-title">Active Subs</div>
-                        <div class="stat-value">{{ $stats['active_user_plans'] }}</div>
+                        <div class="stat-value">{{ $stats['active_user_plans'] ?? '-' }}</div>
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-star"></i>
@@ -393,10 +393,10 @@
                             <tbody>
                                 @foreach($recentUsers as $user)
                                 <tr>
-                                    <td>{{ $user->first_name }} {{ $user->last_name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>${{ number_format($user->wallet, 2) }}</td>
-                                    <td>{{ $user->created_at->format('m/d/Y') }}</td>
+                                    <td>{{ $user->first_name ?? '-' }} {{ $user->last_name ?? '-' }}</td>
+                                    <td>{{ $user->email ?? '-' }}</td>
+                                    <td>${{ number_format($user->wallet, 2) ?? '-' }}</td>
+                                    <td>{{ $user->created_at->format('m/d/Y') ?? '-' }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -429,10 +429,10 @@
                             <tbody>
                                 @foreach($recentPlans as $plan)
                                 <tr>
-                                    <td>{{ $plan->name }}</td>
-                                    <td>${{ number_format($plan->price, 2) }}</td>
-                                    <td>{{ $plan->points }}</td>
-                                    <td>{{ $plan->created_at->format('m/d/Y') }}</td>
+                                    <td>{{ $plan->name ?? '-' }}</td>
+                                    <td>${{ number_format($plan->price, 2) ?? '-' }}</td>
+                                    <td>{{ $plan->points ?? '-' }}</td>
+                                    <td>{{ $plan->created_at->format('m/d/Y') ?? '-' }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -466,10 +466,10 @@
                             <tbody>
                                 @foreach($recentPredictions as $prediction)
                                 <tr>
-                                    <td>{{ $prediction->team1->name }} vs {{ $prediction->team2->name }}</td>
+                                    <td>{{ $prediction->team1->name ?? '-' }} vs {{ $prediction->team2->name ?? '-' }}</td>
                                     <td>
-                                        {{ $prediction->match_date->format('m/d/Y') }}<br>
-                                        {{ $prediction->match_time }}
+                                        {{ $prediction->match_date->format('m/d/Y') ?? '-' }}<br>
+                                        {{ $prediction->match_time ?? '-' }}
                                     </td>
                                     <td>{{ $prediction->is_teaser ? 'Teaser' : 'Regular' }}</td>
                                 </tr>
@@ -503,15 +503,23 @@
                             <tbody>
                                 @foreach($recentLeagues as $league)
                                 <tr>
-                                    <td>{{ Str::limit($league->title, 30) }}</td>
-                                    <td>{{ $league->type }}</td>
-                                    <td>
-                                        @if($league->league_date)
-                                            {{ \Carbon\Carbon::parse($league->league_date)->format('m/d/Y') }}
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
+                                    <td>{{ Str::limit($league->title, 30) ?? '-' }}</td>
+                                <td>
+                                    @if($league->type == 1)
+                                        International
+                                    @elseif($league->type == 2)
+                                        Domestic
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($league->league_date)
+                                        {{ \Carbon\Carbon::parse($league->league_date)->format('m/d/Y') ?? '-' }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -544,8 +552,8 @@
                             <tbody>
                                 @foreach($recentTeams as $team)
                                 <tr>
-                                    <td>{{ $team->name }}</td>
-                                    <td>{{ $team->created_at->format('m/d/Y') }}</td>
+                                    <td>{{ $team->name ?? '-' }}</td>
+                                    <td>{{ $team->created_at->format('m/d/Y') ?? '-'}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -578,10 +586,10 @@
                             <tbody>
                                 @foreach($recentUserPlans as $subscription)
                                 <tr>
-                                    <td>{{ $subscription->user->first_name }}</td>
-                                    <td>{{ $subscription->plan->name }}</td>
-                                    <td>${{ number_format($subscription->price, 2) }}</td>
-                                    <td>{{ $subscription->created_at->format('m/d/Y') }}</td>
+                                    <td>{{ $subscription->user->first_name ?? '-' }}</td>
+                                    <td>{{ $subscription->plan->name ?? '-' }}</td>
+                                    <td>${{ number_format($subscription->price, 2) ?? '-' }}</td>
+                                    <td>{{ $subscription->created_at->format('m/d/Y') ?? '-' }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
