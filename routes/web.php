@@ -31,6 +31,9 @@ use Illuminate\Support\Facades\Route;
       Route::get('/pricing',[FrontController::class,'pricing'])->name('pricing');
       Route::get('/testimonials',[FrontController::class,'testimonials'])->name('testimonials');
     });
+    Route::get('/prediction/{prediction}/view', [PridectionController::class, 'checkAccess'])
+    ->name('prediction.view')
+    ->middleware('auth');
     Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
     Route::get('/payment/{plan}', [PaymentController::class, 'showPaymentForm'])->name('payment.show');
     Route::post('/payment/process/{plan}', [PaymentController::class, 'processPayment'])->name('payment.process');

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
+use App\Models\Pridection;
 use App\Models\Team;
+use App\Models\UserPredictionLog;
 use App\Repositories\PridectionRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -61,10 +63,8 @@ class PridectionController extends Controller
         try {
             DB::beginTransaction();
 
-            // Create prediction
             $prediction = $this->predictionRepo->createPrediction($data);
 
-            // Save plan deductions
             foreach ($request->input('plan_deductions') as $planId => $deduction) {
                 $prediction->predictionDetails()->create([
                     'plan_id' => $planId,
@@ -124,8 +124,7 @@ class PridectionController extends Controller
 
             $prediction = $this->predictionRepo->updatePrediction(decrypt($id), $data);
 
-            // Update plan deductions
-            $prediction->predictionDetails()->delete(); // Remove existing
+            $prediction->predictionDetails()->delete();
             foreach ($request->input('plan_deductions') as $planId => $deduction) {
                 $prediction->predictionDetails()->create([
                     'plan_id' => $planId,
@@ -164,5 +163,47 @@ class PridectionController extends Controller
                 'message' => 'Failed to delete prediction: ' . $e->getMessage()
             ], 500);
         }
+    }
+    public function checkAccess(Pridection $prediction)
+    {
+        $user = auth()->user();
+
+        if (!$user->plan_id) {
+            return redirect()->route('plans')->with('error', 'You need to subscribe to a plan first');
+        }
+
+        $plan = Plan::find($user->plan_id);
+
+        $predictionDetail = $prediction->details()->where('plan_id', $plan->uuid)->first();
+
+        if (!$predictionDetail) {
+            return back()->with('error', 'This prediction is not available for your plan');
+        }
+
+        if ($user->wallet < $predictionDetail->points_deduction) {
+            return redirect()->back()->with('error', 'Insufficient points in your wallet');
+        }
+
+        DB::transaction(function () use ($user, $prediction, $predictionDetail, $plan) {
+            $oldWallet = $user->wallet;
+            $user->wallet -= $predictionDetail->points_deduction;
+            $user->save();
+
+            UserPredictionLog::create([
+                'pred_id' => $prediction->uuid,
+                'user_id' => $user->id,
+                'plan_id' => $plan->uuid,
+                'old_wallet' => $oldWallet,
+                'new_wallet' => $user->wallet,
+                'points_deduction' => $predictionDetail->points_deduction
+            ]);
+        });
+
+        $expiresAt = now()->addHours($plan->predicted_view_duration_offset);
+
+        session()->put('prediction_access.'.$prediction->id, $expiresAt);
+
+        // return view('front.index', compact('prediction', 'expiresAt'));
+        return redirect()->back()->with('success','Message');
     }
 }

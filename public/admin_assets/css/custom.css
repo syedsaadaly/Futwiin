@@ -1207,3 +1207,8 @@ label:not(.form-check-label):not(.custom-file-label) {
     width: 100vw;
   background-color: rgba(0, 0, 0, 0.3) !important;
 }
+.page-heading {
+    font-size: 24px;
+    color: white;
+    background: black !important;
+}

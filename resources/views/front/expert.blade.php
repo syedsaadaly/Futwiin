@@ -12,81 +12,69 @@
     </div>
 
 
-    <section class="pick-sec Expert-pick">
+   <section class="pick-sec Expert-pick">
         <div class="container">
             <div class="pick-top text-center" data-aos="fade-up" data-duration="4000">
                 <h2 class="mainHead">Today's Featured Picks</h2>
                 <p>Preview our expert predictions for today's matches. Full analysis and detailed picks are available for premium members.</p>
             </div>
             <div class="row justify-content-center" data-aos="fade-up" data-duration="4000">
+                @forelse($predictions as $prediction)
                 <div class="col-md-4">
                     <div class="pick-wrapp">
                         <figure class="pick-imag">
-                            <img src="{{ asset('front/images/pick.webp') }}" class="img-fluid" alt="">
+                            @if($prediction->getFirstMediaUrl('prediction_images'))
+                            <img src="{{ $prediction->getFirstMediaUrl('prediction_images') }}" class="img-fluid" alt="{{ $prediction->team1->name }} vs {{ $prediction->team2->name }}">
+                            @else
+                            <img src="{{ asset('front/images/default-pick.webp') }}" class="img-fluid" alt="Default prediction image">
+                            @endif
                         </figure>
                         <div class="pick-content">
                             <ul class="pick-list">
-                                <li><a href=""><span>FIFA Club World Cup</span>Jun 25, 6:00 PM</a></li>
+                                <li>
+                                    <a href="">
+                                        <span>{{ $prediction->league?->title ?? 'FIFA Club World Cup' }}</span>
+                                        {{ $prediction->match_date->format('M d') }}, {{ \Carbon\Carbon::parse($prediction->match_time)->format('g:i A') }}
+                                    </a>
+                                </li>
                             </ul>
-                            <h3>Flamengo RJ vs. Chelsea FC</h3>
+                            <h3>{{ $prediction->team1->name }} vs. {{ $prediction->team2->name }}</h3>
                             <div class="pick-center">
                                 <div class="pick-main">
                                     <div class="pick-counter">
-                                        <h5>Fl</h5>
-                                        <span>Flamengo</span>
+                                        <h5>{{ substr($prediction->team1->name, 0, 2) }}</h5>
+                                        <span>{{ $prediction->team1->name }}</span>
                                     </div>
                                     <h6>vs</h6>
                                     <div class="pick-counter">
-                                        <span>Chelsea</span>
-                                        <h5>Ch</h5>
+                                        <span>{{ $prediction->team2->name }}</span>
+                                        <h5>{{ substr($prediction->team2->name, 0, 2) }}</h5>
                                     </div>
                                 </div>
                             </div>
-                            <p>🔥 Flamengo RJ vs Chelsea 🕐 Kickoff: June 20, 2025 – 1:00 PM ✅ Pick: Chelsea Total Goals Under 2.5 🔍 Analysis: Chel… </p>
+                            <p>{{ Str::limit($prediction->text, 100) }}</p>
                             <div class="pick-bottom">
                                 <a href="">82% Success Rate</a>
+                                @if(auth()->check())
                                 <a href="">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
+                                @else
+                                <a href="">Login for Analysis<i class="fal fa-long-arrow-right"></i></a>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="pick-wrapp">
-                        <figure class="pick-imag">
-                            <img src="{{ asset('front/images/pic2.webp') }}" class="img-fluid" alt="">
-                        </figure>
-                        <div class="pick-content">
-                            <ul class="pick-list">
-                                <li><a href=""><span>FIFA Club World Cup</span>Jun 26, 1:00 AM</a></li>
-                            </ul>
-                            <h3>Bayern Munich vs. Boca Juniors</h3>
-                            <div class="pick-center">
-                                <div class="pick-main">
-                                    <div class="pick-counter">
-                                        <h5>Ba
-                                        </h5>
-                                        <span>
-                                            Bayern</span>
-                                    </div>
-                                    <h6>vs</h6>
-                                    <div class="pick-counter">
-                                        <span>
-                                            Boca</span>
-                                        <h5>Bo</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <p>🔥 Bayern Munich vs Boca Juniors 🕗 Kickoff: June 20, 2025 – 8:00 PM ✅ Pick: Boca Juniors Total Goals Under 1.5 🔍 Ana </p>
-                            <div class="pick-bottom">
-                                <a href="">82% Success Rate</a>
-                                <a href="">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @empty
                 <div class="col-md-12 text-center">
-                    <a href="register.php" class="themeBtn">Access All Premium Picks</a>
+                    <p>No featured predictions available at the moment.</p>
                 </div>
+                @endforelse
+
+                @if($showRegisterButton)
+                <div class="col-md-12 text-center">
+                    <a href="{{ route('register') }}" class="themeBtn">Access All Premium Picks</a>
+                </div>
+                @endif
             </div>
         </div>
     </section>

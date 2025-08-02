@@ -9,7 +9,7 @@
         <div class="col-12">
             <div class="card card-primary" data-aos="fade-up" data-aos-duration="1000">
                 <div class="card-header text-white pb-0" style="background-color: rgb(0, 0, 0);">
-                    <h1 style="font-size: 24px">
+                    <h1 style="font-size: 24px" class="page-heading">
                         {{ $pageData->pageName ?? 'Create New Prediction' }}
                     </h1>
                 </div>

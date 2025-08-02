@@ -10,8 +10,8 @@
                         <p data-swiper-parallax="-200">
                             Get exclusive betting picks from Top 5 European leagues by experts with a proven track record of success </p>
                         <div class="btn-group">
-                            <a href="#" class="themeBtn">Start Winning Today</a>
-                            <a href="#" class="themeBtn">How It Works</a>
+                            <a href="{{ route('front.expert') }}" class="themeBtn">Start Winning Today</a>
+                            <a href="{{ route('front.expert') }}" class="themeBtn">How It Works</a>
                         </div>
                         <div class="counter-main">
                             <div class="counters">
@@ -43,74 +43,66 @@
                 <p>Preview our expert predictions for today's matches. Full analysis and detailed picks are available for premium members.</p>
             </div>
             <div class="row" data-aos="fade-up" data-duration="4000">
+                @forelse($predictions as $prediction)
                 <div class="col-md-4">
                     <div class="pick-wrapp">
                         <figure class="pick-imag">
-                            <img src="{{ asset('front/images/pick.webp') }}" class="img-fluid" alt="">
+                            @if($prediction->getFirstMediaUrl('prediction_images'))
+                            <img src="{{ $prediction->getFirstMediaUrl('prediction_images') }}" class="img-fluid" alt="{{ $prediction->title }}">
+                            @else
+                            <img src="{{ asset('front/images/default-pick.webp') }}" class="img-fluid" alt="Default prediction image">
+                            @endif
                         </figure>
                         <div class="pick-content">
                             <ul class="pick-list">
-                                <li><a href=""><span>FIFA Club World Cup</span>Jun 25, 6:00 PM</a></li>
+                                <li>
+                                    <a href="">
+                                        <span>{{ $prediction->league->title ?? 'FIFA Club World Cup' }}</span>
+                                        {{ $prediction->match_date->format('M d') }}, {{ \Carbon\Carbon::parse($prediction->match_time)->format('g:i A') }}
+                                    </a>
+                                </li>
                             </ul>
-                            <h3>Flamengo RJ vs. Chelsea FC</h3>
+                            <h3>{{ $prediction->team1->name }} vs. {{ $prediction->team2->name }}</h3>
                             <div class="pick-center">
                                 <div class="pick-main">
                                     <div class="pick-counter">
-                                        <h5>Fl</h5>
-                                        <span>Flamengo</span>
+                                        <h5>{{ substr($prediction->team1->name, 0, 2) }}</h5>
+                                        <span>{{ $prediction->team1->name }}</span>
                                     </div>
                                     <h6>vs</h6>
                                     <div class="pick-counter">
-                                        <span>Chelsea</span>
-                                        <h5>Ch</h5>
+                                        <span>{{ $prediction->team2->name }}</span>
+                                        <h5>{{ substr($prediction->team2->name, 0, 2) }}</h5>
                                     </div>
                                 </div>
                             </div>
-                            <p>🔥 Flamengo RJ vs Chelsea 🕐 Kickoff: June 20, 2025 – 1:00 PM ✅ Pick: Chelsea Total Goals Under 2.5 🔍 Analysis: Chel… </p>
+                            <p>{{ Str::limit($prediction->text, 100) }}</p>
                             <div class="pick-bottom">
                                 <a href="">82% Success Rate</a>
-                                <a href="">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
+                                @if(auth()->check())
+                                <a href="{{ route('prediction.view', $prediction->uuid) }}">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
+                                @else
+                                <a href="{{ route('login') }}">Login for Analysis<i class="fal fa-long-arrow-right"></i></a>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="pick-wrapp">
-                        <figure class="pick-imag">
-                            <img src="{{ asset('front/images/pic2.webp') }}" class="img-fluid" alt="">
-                        </figure>
-                        <div class="pick-content">
-                            <ul class="pick-list">
-                                <li><a href=""><span>FIFA Club World Cup</span>Jun 26, 1:00 AM</a></li>
-                            </ul>
-                            <h3>Bayern Munich vs. Boca Juniors</h3>
-                            <div class="pick-center">
-                                <div class="pick-main">
-                                    <div class="pick-counter">
-                                        <h5>Ba
-                                        </h5>
-                                        <span>
-                                            Bayern</span>
-                                    </div>
-                                    <h6>vs</h6>
-                                    <div class="pick-counter">
-                                        <span>
-                                            Boca</span>
-                                        <h5>Bo</h5>
-                                    </div>
-                                </div>
-                            </div>
-                            <p>🔥 Bayern Munich vs Boca Juniors 🕗 Kickoff: June 20, 2025 – 8:00 PM ✅ Pick: Boca Juniors Total Goals Under 1.5 🔍 Ana </p>
-                            <div class="pick-bottom">
-                                <a href="">82% Success Rate</a>
-                                <a href="">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @empty
                 <div class="col-md-12 text-center">
-                    <a href="" class="themeBtn">Access All Premium Picks</a>
+                    <p>No featured predictions available at the moment.</p>
                 </div>
+                @endforelse
+
+                @if($predictions->count() > 0)
+                <div class="col-md-12 text-center">
+                    @if(auth()->check())
+                    <a href="{{ route('front.expert') }}" class="themeBtn">View All Premium Picks</a>
+                    @else
+                    <a href="{{ route('register') }}" class="themeBtn">Access All Premium Picks</a>
+                    @endif
+                </div>
+                @endif
             </div>
         </div>
     </section>
@@ -314,155 +306,108 @@
         </div>
     </section>
 
-    <section class="footerball-sec">
-        <div class="container">
-            <div class="footerball-top" data-aos="fade-up" data-duration="4000">
-                <h2 class="mainHead">Comprehensive Football Coverage</h2>
-                <p>Expert analysis and predictions for Europe's top domestic leagues and premier international competitions including Champions League, Europa League, and Nations League.</p>
-            </div>
-            <div class="row" data-aos="fade-up" data-duration="4000">
-                <div class="col-md-12">
-                    <div class="btn-group">
-                        <a href="">Domestic Leagues </a>
-                        <a href="">International</a>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="footeball-tabs">
-                                <ul id="tabs-nav">
-                                    <li><a href="#tab1">Premier League</a></li>
-                                    <li><a href="#tab2">La Liga</a></li>
-                                    <li><a href="#tab3">Bundesliga</a></li>
-                                    <li><a href="#tab4">Serie A</a></li>
-                                    <li><a href="#tab5">Ligue 1</a></li>
-                                </ul>
-                                <div id="tabs-content">
-                                    <div id="tab1" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="{{ asset('front/images/football1.webp') }}" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4> Premier League</h4>
-                                                        <p> England’s top flight offers some of the most exciting and competitive football in the world.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab2" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="{{ asset('front/images/football2.webp') }}" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4>
-                                                            La Liga</h4>
-                                                        <p> Spain’s premier competition showcases some of the world’s most technically gifted players.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab3" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="{{ asset('front/images/football3.webp') }}" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4>Bundesliga</h4>
-                                                        <p> Germany’s top league is known for high-scoring matches and passionate fan atmospheres.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab4" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="{{ asset('front/images/football4.webp') }}" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4>
-                                                            Serie A</h4>
-                                                        <p> Italy’s Serie A is famous for tactical sophistication and defensive excellence.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab5" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="{{ asset('front/images/football5.webp') }}" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4> Ligue 1</h4>
-                                                        <p>
-                                                            France’s top division is a showcase for emerging talents and established stars.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+ <section class="footerball-sec">
+    <div class="container">
+        <div class="container py-4 d-flex justify-content-center">
+            <ul class="nav custom-tab-toggle" id="mainTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="domestic-tab" data-toggle="pill" href="#domestic" role="tab">Domestic Leagues</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="international-tab" data-toggle="pill" href="#international" role="tab">International</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="mainTabContent">
+            <div class="tab-pane fade show active" id="domestic" role="tabpanel">
+                <ul class="nav nav-tabs football-tabs justify-content-center" id="nestedTabDomestic" role="tablist">
+                    @foreach($domesticLeagues as $league)
+                    <li class="nav-item">
+                        <a class="nav-link {{ $loop->first ? 'active' : '' }}"
+                           data-toggle="tab"
+                           href="#league-{{ $league->id }}"
+                           role="tab">
+                           {{ $league->title }}
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+
+                <div class="tab-content pt-4" id="nestedTabContentDomestic">
+                    @foreach($domesticLeagues as $league)
+                    <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="league-{{ $league->id }}" role="tabpanel">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <img src="{{ $league->getFirstMediaUrl('league_images') }}"
+                                     class="img-fluid fotbal-img"
+                                     alt="{{ $league->title }}">
+                            </div>
+                            <div class="col-md-5">
+                                <div class="tab_content">
+                                    <h4>{{ $league->title }}</h4>
+                                    <p>{{ $league->text ?? 'No description available' }}</p>
+                                    <ul class="list-unstyled">
+                                        <li><i class="far fa-check-circle"></i> 20 teams coverage</li>
+                                        <li><i class="far fa-check-circle"></i> 90% prediction accuracy</li>
+                                        <li><i class="far fa-check-circle"></i> 380 matches per season</li>
+                                    </ul>
+                                    @guest
+                                    <a href="{{ route('register') }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
+                                    @endguest
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="international" role="tabpanel">
+                <ul class="nav nav-tabs football-tabs justify-content-center" id="nestedTabInternational" role="tablist">
+                    @foreach($internationalLeagues as $league)
+                    <li class="nav-item">
+                        <a class="nav-link {{ $loop->first ? 'active' : '' }}"
+                           data-toggle="tab"
+                           href="#league-{{ $league->id }}"
+                           role="tab">
+                           {{ $league->title }}
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+
+                <div class="tab-content pt-4" id="nestedTabContentInternational">
+                    @foreach($internationalLeagues as $league)
+                    <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="league-{{ $league->id }}" role="tabpanel">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <img src="{{ $league->getFirstMediaUrl('league_images') }}"
+                                     class="img-fluid fotbal-img"
+                                     alt="{{ $league->title }}">
+                            </div>
+                            <div class="col-md-5">
+                                <div class="tab_content">
+                                    <h4>{{ $league->title }}</h4>
+                                    <p>{{ $league->text ?? 'No description available' }}</p>
+                                    <ul class="list-unstyled">
+                                        <li><i class="far fa-check-circle"></i> 20 teams coverage</li>
+                                        <li><i class="far fa-check-circle"></i> 90% prediction accuracy</li>
+                                        <li><i class="far fa-check-circle"></i> 380 matches per season</li>
+                                    </ul>
+                                    @guest
+                                    <a href="{{ route('register') }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
+                                    @endguest
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <section class="fifa">
         <div class="prediction-table" data-aos="fade-up" data-duration="4000">
@@ -677,7 +622,7 @@
         </div>
     </section>
 
-    <section class="membership">
+    <section class="membership pricing-membership">
         <div class="container">
             <div class="member_head" data-aos="fade-up" data-duration="4000">
                 <h2 class="mainHead">Membership Plans</h2>
@@ -686,63 +631,42 @@
             <div class="row justify-content-center" data-aos="fade-up" data-duration="4000">
                 <div class="col-md-10">
                     <div class="row align-items-end justify-content-center">
-                        <div class="col-md-4">
+                        @foreach($plans as $plan)
+                        <div class="col-md-4 mb-4">
                             <div class="package">
-                                <h3>Monthly</h3>
+                                <h3>{{ $plan->name }}</h3>
                                 <div class="monthly">
-                                    <h2>$9.99</h2>
-                                    <h5>per month</h5>
+                                    <h2>${{ number_format($plan->price, 2) }}</h2>
+                                    @if(str_contains(strtolower($plan->name), 'monthly'))
+                                        <h5>per month</h5>
+                                    @elseif(str_contains(strtolower($plan->name), 'quarterly'))
+                                        <h5>per quarter</h5>
+                                        <h4>Save 20%</h4>
+                                    @elseif(str_contains(strtolower($plan->name), 'annual'))
+                                        <h5>per year</h5>
+                                        <h4>Save 20%</h4>
+                                    @endif
                                     <ul>
                                         <li><i class="far fa-check-circle"></i> All premium picks</li>
                                         <li><i class="far fa-check-circle"></i> Detailed analysis</li>
                                         <li><i class="far fa-check-circle"></i> Top 5 leagues coverage</li>
+                                        @if($plan->points > 0)
+                                            <li><i class="far fa-check-circle"></i> Earn {{ $plan->points }} points</li>
+                                        @endif
                                         <li><i class="far fa-times-circle"></i> Email notifications</li>
                                         <li><i class="far fa-times-circle"></i> Early access to picks</li>
                                     </ul>
-                                    <a href="#">Sign Up & Subscribe</a>
+                                    <a href="{{ auth()->check() ? route('payment.show', $plan->uuid) : route('register', ['plan' => $plan->uuid]) }}">
+                                        Sign Up & Subscribe
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="package">
-                                <h3>Quarterly</h3>
-                                <div class="monthly">
-                                    <h2>$9.99</h2>
-                                    <h5>per quarter</h5>
-                                    <h4>Save 20%</h4>
-                                    <ul>
-                                        <li><i class="far fa-check-circle"></i> All premium picks</li>
-                                        <li><i class="far fa-check-circle"></i> Detailed analysis</li>
-                                        <li><i class="far fa-check-circle"></i> Top 5 leagues coverage</li>
-                                        <li><i class="far fa-check-circle"></i> Email notifications</li>
-                                        <li><i class="far fa-times-circle"></i> Early access to picks</li>
-                                    </ul>
-                                    <a href="#">Sign Up & Subscribe</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="package">
-                                <h3>Annual</h3>
-                                <div class="monthly">
-                                    <h2>$79.99</h2>
-                                    <h5>per year</h5>
-                                    <h4>Save 20%</h4>
-                                    <ul>
-                                        <li><i class="far fa-check-circle"></i> All premium picks</li>
-                                        <li><i class="far fa-check-circle"></i> Detailed analysis</li>
-                                        <li><i class="far fa-check-circle"></i> Top 5 leagues coverage</li>
-                                        <li><i class="far fa-check-circle"></i> Email notifications</li>
-                                        <li><i class="far fa-check-circle"></i> Early access to picks</li>
-                                    </ul>
-                                    <a href="#">Sign Up & Subscribe</a>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-center">
+             <div class="row justify-content-center">
                 <div class="col-md-7">
                     <div class="satisfaction">
                         <figure>

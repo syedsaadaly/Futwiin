@@ -14,151 +14,103 @@
     </div>
 
 
-
-    <section class="footerball-sec leagues-footerball">
+   <section class="footerball-sec">
         <div class="container">
-            <div class="footerball-top" data-aos="fade-up" data-duration="4000">
-                <h2 class="mainHead">Comprehensive Football Coverage</h2>
-                <p>Expert analysis and predictions for Europe's top domestic leagues and premier international competitions including Champions League, Europa League, and Nations League.</p>
+            <div class="container py-4 d-flex justify-content-center">
+                <ul class="nav custom-tab-toggle" id="mainTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="domestic-tab" data-toggle="pill" href="#domestic" role="tab">Domestic Leagues</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="international-tab" data-toggle="pill" href="#international" role="tab">International</a>
+                    </li>
+                </ul>
             </div>
-            <div class="row" data-aos="fade-up" data-duration="4000">
-                <div class="col-md-12">
-                    <div class="btn-group">
-                        <a href="">Domestic Leagues </a>
-                        <a href="">International</a>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="footeball-tabs">
-                                <ul id="tabs-nav">
-                                    <li><a href="#tab1">Premier League</a></li>
-                                    <li><a href="#tab2">La Liga</a></li>
-                                    <li><a href="#tab3">Bundesliga</a></li>
-                                    <li><a href="#tab4">Serie A</a></li>
-                                    <li><a href="#tab5">Ligue 1</a></li>
-                                </ul>
-                                <div id="tabs-content">
-                                    <div id="tab1" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="images/football1.webp" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4> Premier League</h4>
-                                                        <p> England’s top flight offers some of the most exciting and competitive football in the world.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab2" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="{{ asset('front/images/football2.webp ') }}" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4>
-                                                            La Liga</h4>
-                                                        <p> Spain’s premier competition showcases some of the world’s most technically gifted players.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab3" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="images/football3.webp" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4>Bundesliga</h4>
-                                                        <p> Germany’s top league is known for high-scoring matches and passionate fan atmospheres.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab4" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="images/football4.webp" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4>
-                                                            Serie A</h4>
-                                                        <p> Italy’s Serie A is famous for tactical sophistication and defensive excellence.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="tab5" class="tab-content">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-7">
-                                                <figure class="football-imag">
-                                                    <img src="images/football5.webp" class="img-fluid" alt="">
-                                                </figure>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="football-wrapp">
-                                                    <div class="football-content">
-                                                        <h4> Ligue 1</h4>
-                                                        <p>
-                                                            France’s top division is a showcase for emerging talents and established stars.</p>
-                                                        <ul class="football-list">
-                                                            <li><a href=""><i class="far fa-check-circle"></i> 20 teams coverage</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>90% prediction accuracy</a></li>
-                                                            <li><a href=""><i class="far fa-check-circle"></i>380 matches per season</a></li>
-                                                        </ul>
-                                                        <a href="" class="themeBtn">Get Premier League Picks</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
+            <div class="tab-content" id="mainTabContent">
+                <div class="tab-pane fade show active" id="domestic" role="tabpanel">
+                    <ul class="nav nav-tabs football-tabs justify-content-center" id="nestedTabDomestic" role="tablist">
+                        @foreach($domesticLeagues as $league)
+                        <li class="nav-item">
+                            <a class="nav-link {{ $loop->first ? 'active' : '' }}"
+                            data-toggle="tab"
+                            href="#league-{{ $league->id }}"
+                            role="tab">
+                            {{ $league->title }}
+                            </a>
+                        </li>
+                        @endforeach
+                    </ul>
+
+                    <div class="tab-content pt-4" id="nestedTabContentDomestic">
+                        @foreach($domesticLeagues as $league)
+                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="league-{{ $league->id }}" role="tabpanel">
+                            <div class="row align-items-center">
+                                <div class="col-md-7">
+                                    <img src="{{ $league->getFirstMediaUrl('league_images') }}"
+                                        class="img-fluid fotbal-img"
+                                        alt="{{ $league->title }}">
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="tab_content">
+                                        <h4>{{ $league->title }}</h4>
+                                        <p>{{ $league->text ?? 'No description available' }}</p>
+                                        <ul class="list-unstyled">
+                                            <li><i class="far fa-check-circle"></i> 20 teams coverage</li>
+                                            <li><i class="far fa-check-circle"></i> 90% prediction accuracy</li>
+                                            <li><i class="far fa-check-circle"></i> 380 matches per season</li>
+                                        </ul>
+                                        @guest
+                                        <a href="{{ route('register') }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
+                                        @endguest
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="international" role="tabpanel">
+                    <ul class="nav nav-tabs football-tabs justify-content-center" id="nestedTabInternational" role="tablist">
+                        @foreach($internationalLeagues as $league)
+                        <li class="nav-item">
+                            <a class="nav-link {{ $loop->first ? 'active' : '' }}"
+                            data-toggle="tab"
+                            href="#league-{{ $league->id }}"
+                            role="tab">
+                            {{ $league->title }}
+                            </a>
+                        </li>
+                        @endforeach
+                    </ul>
+
+                    <div class="tab-content pt-4" id="nestedTabContentInternational">
+                        @foreach($internationalLeagues as $league)
+                        <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="league-{{ $league->id }}" role="tabpanel">
+                            <div class="row align-items-center">
+                                <div class="col-md-7">
+                                    <img src="{{ $league->getFirstMediaUrl('league_images') }}"
+                                        class="img-fluid fotbal-img"
+                                        alt="{{ $league->title }}">
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="tab_content">
+                                        <h4>{{ $league->title }}</h4>
+                                        <p>{{ $league->text ?? 'No description available' }}</p>
+                                        <ul class="list-unstyled">
+                                            <li><i class="far fa-check-circle"></i> 20 teams coverage</li>
+                                            <li><i class="far fa-check-circle"></i> 90% prediction accuracy</li>
+                                            <li><i class="far fa-check-circle"></i> 380 matches per season</li>
+                                        </ul>
+                                        @guest
+                                        <a href="{{ route('register') }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
+                                        @endguest
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -218,4 +170,54 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('.international-league').hide();
+    $('.tab-content.international').hide();
+
+    if ($('.domestic-league').length === 0) {
+        $('.league-type-selector a[data-type="international"]').click();
+    }
+
+    $('.league-type-selector a').click(function(e) {
+        e.preventDefault();
+        var type = $(this).data('type');
+
+        $('.league-type-selector a').removeClass('active');
+        $(this).addClass('active');
+
+        if (type === 'domestic') {
+            $('.domestic-league').show();
+            $('.international-league').hide();
+
+            if ($('.tab-content.active').length === 0 || $('.tab-content.active').hasClass('international')) {
+                $('.tab-content.active').removeClass('active').hide();
+                $('.domestic-league:first a').click();
+            }
+        } else {
+            $('.domestic-league').hide();
+            $('.international-league').show();
+
+            if ($('.tab-content.active').length === 0 || $('.tab-content.active').hasClass('domestic')) {
+                $('.tab-content.active').removeClass('active').hide();
+                $('.international-league:first a').click();
+            }
+        }
+    });
+
+    $('#tabs-nav').on('click', 'li a', function(e) {
+        e.preventDefault();
+        var tabId = $(this).attr('href');
+
+        $('#tabs-nav li').removeClass('active');
+        $(this).parent().addClass('active');
+
+        $('.tab-content').removeClass('active').hide();
+        $(tabId).addClass('active').show();
+    });
+});
+</script>
 @endsection

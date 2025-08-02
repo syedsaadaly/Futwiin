@@ -64,7 +64,7 @@
 <script src="{{ asset('front/js/custom.min.js') }}"></script>
 @yield('scripts')
 
-
+@include('components.notification')
 </body>
 
 </html>

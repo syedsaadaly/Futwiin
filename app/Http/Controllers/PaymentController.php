@@ -22,7 +22,6 @@ class PaymentController extends Controller
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        // Create PaymentIntent
         $paymentIntent = PaymentIntent::create([
             'amount' => $plan->price * 100,
             'currency' => 'usd',
@@ -48,10 +47,8 @@ class PaymentController extends Controller
         Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
-            // Retrieve the PaymentIntent
             $paymentIntent = PaymentIntent::retrieve($request->payment_intent_id);
 
-            // Verify payment was successful
             if ($paymentIntent->status !== 'succeeded') {
                 return response()->json([
                     'success' => false,
@@ -59,7 +56,6 @@ class PaymentController extends Controller
                 ], 400);
             }
 
-            // Record payment
             $payment = UserPayment::create([
                 'uuid' => Str::uuid(),
                 'plan_id' => $plan->uuid,
@@ -70,9 +66,9 @@ class PaymentController extends Controller
                 'status' => 'completed',
             ]);
 
-            // Update user wallet
             $oldWallet = $user->wallet;
             $user->wallet += $plan->points;
+            $user->plan_id = $plan->uuid;
             $user->save();
 
             UserPlan::create([

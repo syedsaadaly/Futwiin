@@ -32,12 +32,10 @@ class ProfileController extends Controller
             'new_password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        // Update basic info
         $user->first_name = $data['first_name'];
         $user->last_name = $data['last_name'];
         $user->email = $data['email'];
 
-        // Update password if provided
         if ($request->filled('current_password') && $request->filled('new_password')) {
             if (!Hash::check($data['current_password'], $user->password)) {
                 return back()->with('error', 'Current password is incorrect');

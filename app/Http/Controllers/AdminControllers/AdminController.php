@@ -18,7 +18,6 @@ class AdminController extends Controller
     {
         $user = Auth::user();
 
-        // Get counts for all modules
         $stats = [
             'users' => User::count(),
             'active_users' => User::whereNull('deleted_at')->count(),
@@ -32,7 +31,6 @@ class AdminController extends Controller
             'active_user_plans' => UserPlan::count(),
         ];
 
-        // Get recent data for tables
         $recentUsers = User::latest()->take(5)->get();
         $recentPlans = Plan::latest()->take(5)->get();
         $recentPredictions = Pridection::with(['team1', 'team2'])
