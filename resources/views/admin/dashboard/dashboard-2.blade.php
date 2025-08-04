@@ -315,7 +315,7 @@
                     <div class="stat-text">
                         <div class="stat-title">Predictions</div>
                         <div class="stat-value">{{ $stats['predictions'] ?? '-' }}</div>
-                        <div class="stat-footer">{{ $stats['upcoming_predictions'] ?? '-' }} upcoming</div>
+                        {{-- <div class="stat-footer">{{ $stats['upcoming_predictions'] ?? '-' }} upcoming</div> --}}
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-chart-line"></i>
@@ -331,7 +331,7 @@
                     <div class="stat-text">
                         <div class="stat-title">Leagues</div>
                         <div class="stat-value">{{ $stats['leagues'] ?? '-' }}</div>
-                        <div class="stat-footer">{{ $stats['active_leagues'] ?? '-' }} active</div>
+                        {{-- <div class="stat-footer">{{ $stats['active_leagues'] ?? '-' }} active</div> --}}
                     </div>
                     <div class="stat-icon">
                         <i class="fas fa-trophy"></i>
