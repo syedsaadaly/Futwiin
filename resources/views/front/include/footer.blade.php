@@ -62,9 +62,26 @@
 
 <!-- CUSTOM JS -->
 <script src="{{ asset('front/js/custom.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @yield('scripts')
+<script>
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
 
-@include('components.notification')
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+
+    @if(session('info'))
+        toastr.info("{{ session('info') }}");
+    @endif
+
+    @if(session('warning'))
+        toastr.warning("{{ session('warning') }}");
+    @endif
+</script>
 </body>
 
 </html>

@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePredictionRequest;
+use App\Http\Requests\UpdatePredictionRequest;
 use App\Models\Plan;
 use App\Models\Pridection;
 use App\Models\Team;
 use App\Models\UserPredictionLog;
 use App\Repositories\PridectionRepository;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PridectionController extends Controller
 {
-     protected $predictionRepo;
+    protected $predictionRepo;
 
     public function __construct(PridectionRepository $predictionRepo)
     {
@@ -43,26 +46,11 @@ class PridectionController extends Controller
         return view('admin.predictions.create', compact('teams','pageData','plans'));
     }
 
-    public function store(Request $request)
+    public function store(StorePredictionRequest $request)
     {
-        $request->merge(['is_teaser' => $request->has('is_teaser')]);
-
-        $data = $request->validate([
-            'team_1_id' => 'required|exists:teams,uuid',
-            'team_2_id' => 'required|exists:teams,uuid|different:team_1_id',
-            'title' => 'required|string|max:255',
-            'match_date' => 'required|date',
-            'match_time' => 'required',
-            'text' => 'nullable|string',
-            'is_teaser' => 'required|boolean',
-            'image' => 'nullable|image|max:2048',
-            'plan_deductions' => 'required|array',
-            'plan_deductions.*' => 'integer|min:0'
-        ]);
-
         try {
             DB::beginTransaction();
-
+            $data = $request->validated();
             $prediction = $this->predictionRepo->createPrediction($data);
 
             foreach ($request->input('plan_deductions') as $planId => $deduction) {
@@ -102,26 +90,11 @@ class PridectionController extends Controller
         return view('admin.predictions.edit', compact('prediction', 'teams','pageData','plans'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdatePredictionRequest $request, $id)
     {
-        $request->merge(['is_teaser' => $request->has('is_teaser')]);
-
-        $data = $request->validate([
-            'team_1_id' => 'required|exists:teams,uuid',
-            'team_2_id' => 'required|exists:teams,uuid|different:team_1_id',
-            'title' => 'required|string|max:255',
-            'match_date' => 'required|date',
-            'match_time' => 'required',
-            'text' => 'nullable|string',
-            'is_teaser' => 'required|boolean',
-            'image' => 'nullable|image|max:2048',
-            'plan_deductions' => 'required|array',
-            'plan_deductions.*' => 'integer|min:0'
-        ]);
-
         try {
             DB::beginTransaction();
-
+            $data = $request->validated();
             $prediction = $this->predictionRepo->updatePrediction(decrypt($id), $data);
 
             $prediction->predictionDetails()->delete();
@@ -166,10 +139,12 @@ class PridectionController extends Controller
     }
     public function checkAccess(Pridection $prediction)
     {
+        date_default_timezone_set('Asia/Karachi');
+
         $user = auth()->user();
 
         if (!$user->plan_id) {
-            return redirect()->route('plans')->with('error', 'You need to subscribe to a plan first');
+            return redirect()->route('front.pricing')->with('error', 'You need to subscribe to a plan first');
         }
 
         $plan = Plan::find($user->plan_id);
@@ -178,6 +153,36 @@ class PridectionController extends Controller
 
         if (!$predictionDetail) {
             return back()->with('error', 'This prediction is not available for your plan');
+        }
+
+        $matchTime = Carbon::create(
+            $prediction->match_date->year,
+            $prediction->match_date->month,
+            $prediction->match_date->day,
+            Carbon::parse($prediction->match_time)->hour,
+            Carbon::parse($prediction->match_time)->minute,
+            0,
+            'Asia/Karachi'
+        );
+
+        $currentTime = Carbon::now('Asia/Karachi');
+        $earliestAccessTime = $matchTime->copy()->subMinutes($plan->predicted_view_duration_offset);
+
+        if ($currentTime->lt($earliestAccessTime)) {
+            $minutesLeft = $currentTime->diffInMinutes($earliestAccessTime);
+
+            if ($minutesLeft >= 60) {
+                $hours = floor($minutesLeft / 60);
+                $remainingMinutes = $minutesLeft % 60;
+                $timeLeft = $hours . ' hour' . ($hours > 1 ? 's' : '');
+                if ($remainingMinutes > 0) {
+                    $timeLeft .= ' and ' . $remainingMinutes . ' minute' . ($remainingMinutes > 1 ? 's' : '');
+                }
+            } else {
+                $timeLeft = $minutesLeft . ' minute' . ($minutesLeft > 1 ? 's' : '');
+            }
+
+            return back()->with('error', "You can access this prediction $timeLeft before match (".$plan->predicted_view_duration_offset." minutes early access)");
         }
 
         if ($user->wallet < $predictionDetail->points_deduction) {
@@ -199,11 +204,9 @@ class PridectionController extends Controller
             ]);
         });
 
-        $expiresAt = now()->addHours($plan->predicted_view_duration_offset);
+        $expiresAt = Carbon::now('Asia/Karachi')->addMinutes($plan->predicted_view_duration_offset);
+        session()->put('prediction_access.'.$prediction->uuid, $expiresAt);
 
-        session()->put('prediction_access.'.$prediction->id, $expiresAt);
-
-        // return view('front.index', compact('prediction', 'expiresAt'));
-        return redirect()->back()->with('success','Message');
+        return redirect()->back()->with('success', 'Prediction accessed successfully!');
     }
 }

@@ -15,6 +15,7 @@
 
     <!-- RESPONSIVE STYLESHEET -->
     <link rel="stylesheet" href="{{ asset('front/css/responsive.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <title>FutWin</title>
 </head>
 <body>
