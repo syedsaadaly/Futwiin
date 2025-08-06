@@ -42,115 +42,94 @@ class LeagueRepositoryEloquent extends BaseRepository implements LeagueRepositor
             'pageName' => 'All League',
             'showTableInfo'=> true,
         ];
+
         $leagues = League::all();
-        return view('admin.league.index',compact('leagues','pageData'));
+
+        return (object) ['leagues' => $leagues, 'pageData' => $pageData];
+
     }
-    public function createPage()
+
+    public function leagueStore(array $validatedData, $imageFile = null)
     {
-        $pageData = (object)[
-            'pageTabTitle' => 'League',
-            'pageName' => 'All League',
-            'showTableInfo'=> true,
-        ];
-
-        return view('admin.league.create',compact('pageData'));
-    }
-    public function leagueStore($request)
-    {
-        $validated = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'type' => 'required|in:1,2',
-            'league_date' => 'required|date',
-            'image' => 'nullable|image',
-            'text' => 'nullable|string',
-        ])->validate();
-
-        DB::beginTransaction();
-
         try {
             $league = League::create([
-                'title' => $validated['title'],
-                'type' => $validated['type'],
-                'league_date' => Carbon::parse($validated['league_date']),
-                'text' => $validated['text'] ?? null,
+                'title' => $validatedData['title'],
+                'type' => $validatedData['type'],
+                'league_date' => Carbon::parse($validatedData['league_date']),
+                'text' => $validatedData['text'] ?? null,
             ]);
 
-            if ($request->hasFile('image')) {
-                $league->addMediaFromRequest('image')
+            if ($imageFile) {
+                $league->addMedia($imageFile)
                     ->toMediaCollection('league_images');
             }
 
-            DB::commit();
             return $league;
 
         } catch (\Exception $e) {
-            DB::rollBack();
             \Log::error('League store error: ' . $e->getMessage());
-            throw $e;
+            return $e;
         }
     }
-    public function editPage($id)
+
+    public function findLeagueById($id)
     {
-        $pageData = (object)[
-            'pageTabTitle' => 'League',
-            'pageName' => 'All League',
-            'showTableInfo'=> true,
-        ];
-        $decryptId = encrypt_decrypt('decrypt',$id);
-        $league = League::where('id',$decryptId)->first();
-        return view('admin.league.edit',compact('league','pageData'));
+        return League::findOrFail($id);
     }
-    public function updateLeague($request, $id)
+
+    public function updateLeague(array $validatedData, $id, $imageFile = null)
     {
-        $validated = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'type' => 'required|in:1,2',
-            'league_date' => 'required|date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'text' => 'nullable|string',
-        ])->validate();
-
-        $decryptId = encrypt_decrypt('decrypt', $id);
-        $league = League::findOrFail($decryptId);
-
-        \DB::beginTransaction();
         try {
+            $league = League::findOrFail($id);
+
             $league->update([
-                'title' => $validated['title'],
-                'type' => $validated['type'],
-                'league_date' => \Carbon\Carbon::parse($validated['league_date']),
-                'text' => $validated['text'] ?? null,
+                'title' => $validatedData['title'],
+                'type' => $validatedData['type'],
+                'league_date' => Carbon::parse($validatedData['league_date']),
+                'text' => $validatedData['text'] ?? null,
             ]);
 
-            if ($request->hasFile('image')) {
+            if ($imageFile) {
                 $league->clearMediaCollection('league_images');
-
-                $league->addMediaFromRequest('image')
+                $league->addMedia($imageFile)
                     ->toMediaCollection('league_images');
             }
 
-            \DB::commit();
             return $league;
 
         } catch (\Exception $e) {
-            \DB::rollBack();
-            \Log::error('League update error: ' . $e->getMessage());
-            throw $e;
+            Log::error('League update error: ' . $e->getMessage());
+            return $e;
         }
     }
+
     public function deleteLeague($id)
     {
-        $decryptId = encrypt_decrypt('decrypt',$id);
-        $league = League::findOrFail($decryptId);
+        $leagueId = $id;
+        $league = League::findOrFail($leagueId);
+
         try {
             $league->clearMediaCollection('league_images');
             $league->delete();
 
             return true;
-
         } catch (\Exception $e) {
             \Log::error('League delete error: ' . $e->getMessage());
             throw $e;
         }
+    }
+    
+    public function getDomesticLeagues()
+    {
+        return League::where('type', 2)
+            ->orderBy('title')
+            ->get();
+    }
+
+    public function getInternationalLeagues()
+    {
+        return League::where('type', 1)
+            ->orderBy('title')
+            ->get();
     }
 }

@@ -29,13 +29,13 @@
                                     <tr>
                                         <td>{{ $team->name ?? '-' }}</td>
                                         <td>
-                                            <a href="{{ route('admin.teams.edit', encrypt($team->uuid)) }}"
+                                            <a href="{{ route('admin.teams.edit', $team->id) }}"
                                                title="Edit" class="btn btn-info btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
                                             <button class="btn btn-danger btn-sm delete_team"
-                                                data-team-id="{{ encrypt($team->uuid) }}"
+                                                data-team-id="{{ $team->id }}"
                                                 title="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>

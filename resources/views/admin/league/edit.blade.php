@@ -10,7 +10,7 @@
                 </div>
                 <div class="card-body">
                     <form name="edit_league_form" id="edit_league_form" method="post"
-                          action="{{ route('admin.leagues.update', encrypt_decrypt('encrypt', $league->id)) }}"
+                          action="{{ route('admin.leagues.update', $league->id) }}"
                           enctype="multipart/form-data">
                         @csrf
                         @method('PUT')

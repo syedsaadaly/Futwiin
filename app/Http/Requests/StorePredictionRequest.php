@@ -24,8 +24,8 @@ class StorePredictionRequest extends FormRequest
     public function rules()
     {
         return [
-            'team_1_id' => 'required|exists:teams,uuid',
-            'team_2_id' => 'required|exists:teams,uuid|different:team_1_id',
+            'team_1_id' => 'required|exists:teams,id',
+            'team_2_id' => 'required|exists:teams,id|different:team_1_id',
             'title' => 'required|string|max:255',
             'match_date' => 'required|date',
             'match_time' => 'required',

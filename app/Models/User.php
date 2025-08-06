@@ -62,7 +62,22 @@ class User extends Authenticatable
     }
     public function plan()
     {
-        return $this->belongsTo(Plan::class, 'plan_id', 'uuid');
+        return $this->belongsTo(Plan::class, 'plan_id', 'id');
+    }
+
+    public static function getRecentUsers($limit = 5)
+    {
+        return self::latest()->take($limit)->get();
+    }
+
+    public static function getAllWithRoles()
+    {
+        return self::with('roles')->orderBy('created_at', 'desc')->get();
+    }
+
+    public static function deleteById($id)
+    {
+        return self::findOrFail($id)->forceDelete();
     }
 
 }

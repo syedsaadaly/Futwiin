@@ -52,13 +52,13 @@
                                         </td>
                                         <td>{{ Str::limit($plan->text, 50) ?? '-' }}</td>
                                         <td>
-                                            <a href="{{ route('admin.plans.edit', encrypt($plan->uuid)) }}"
+                                            <a href="{{ route('admin.plans.edit', $plan->id) }}"
                                                title="Edit" class="btn btn-info btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
                                             <button class="btn btn-danger btn-sm delete_plan"
-                                                data-plan-id="{{ encrypt($plan->uuid) }}"
+                                                data-plan-id="{{ $plan->id }}"
                                                 title="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>

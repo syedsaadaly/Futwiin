@@ -4,17 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
 
 class UserPayment extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'uuid';
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $primaryKey = 'id';
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
+    }
 
     protected $fillable = [
-        'uuid',
+        'id',
         'plan_id',
         'user_id',
         'price',
@@ -29,11 +42,11 @@ class UserPayment extends Model
 
     public function plan()
     {
-        return $this->belongsTo(Plan::class, 'plan_id', 'uuid');
+        return $this->belongsTo(Plan::class, 'plan_id', 'id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'uuid');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

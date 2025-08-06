@@ -15,7 +15,7 @@
                 </div>
                 <div class="card-body">
                     <form name="edit_prediction_form" id="edit_prediction_form" method="post"
-                          action="{{ route('admin.predictions.update', encrypt($prediction->uuid)) }}" enctype="multipart/form-data">
+                          action="{{ route('admin.predictions.update', $prediction->id) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row">
@@ -25,7 +25,7 @@
                                     <select class="form-control" id="team_1_id" name="team_1_id" required>
                                         <option value="">Select Team</option>
                                         @foreach($teams as $team)
-                                            <option value="{{ $team->uuid }}" {{ $prediction->team_1_id == $team->uuid ? 'selected' : '' }}>{{ $team->name }}</option>
+                                            <option value="{{ $team->id }}" {{ $prediction->team_1_id == $team->id ? 'selected' : '' }}>{{ $team->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -37,7 +37,7 @@
                                     <select class="form-control" id="team_2_id" name="team_2_id" required>
                                         <option value="">Select Team</option>
                                         @foreach($teams as $team)
-                                            <option value="{{ $team->uuid }}" {{ $prediction->team_2_id == $team->uuid ? 'selected' : '' }}>{{ $team->name }}</option>
+                                            <option value="{{ $team->id }}" {{ $prediction->team_2_id == $team->id ? 'selected' : '' }}>{{ $team->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -114,7 +114,7 @@
                                         <tbody>
                                             @foreach($plans as $plan)
                                             @php
-                                                $detail = $prediction->predictionDetails->where('plan_id', $plan->uuid)->first();
+                                                $detail = $prediction->predictionDetails->where('plan_id', $plan->id)->first();
                                                 $deduction = $detail ? $detail->points_deduction : 0;
                                             @endphp
                                             <tr>
@@ -122,8 +122,8 @@
                                                 <td>
                                                     <input type="number"
                                                         class="form-control"
-                                                        name="plan_deductions[{{ $plan->uuid }}]"
-                                                        value="{{ old('plan_deductions.'.$plan->uuid, $deduction) }}"
+                                                        name="plan_deductions[{{ $plan->id }}]"
+                                                        value="{{ old('plan_deductions.'.$plan->id, $deduction) }}"
                                                         min="0" required>
                                                 </td>
                                             </tr>

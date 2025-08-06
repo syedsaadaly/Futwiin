@@ -49,7 +49,7 @@
                                         <li><i class="far fa-times-circle"></i> Email notifications</li>
                                         <li><i class="far fa-times-circle"></i> Early access to picks</li>
                                     </ul>
-                                    <a href="{{ auth()->check() ? route('payment.show', $plan->uuid) : route('register', ['plan' => $plan->uuid]) }}">
+                                    <a href="{{ auth()->check() ? route('payment.show', $plan->id) : route('register', ['plan' => $plan->id]) }}">
                                         Sign Up & Subscribe
                                     </a>
                                 </div>

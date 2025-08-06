@@ -14,8 +14,8 @@ class CreateUserPaymentsTable extends Migration
     public function up()
     {
         Schema::create('user_payments', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->foreignUuid('plan_id')->constrained('plans', 'uuid');
+            $table->uuid('id')->primary();
+            $table->foreignUuid('plan_id')->constrained('plans', 'id');
             $table->foreignUuid('user_id')->constrained('users', 'id');
             $table->decimal('price', 10, 2);
             $table->string('payment_mode')->default('stripe');

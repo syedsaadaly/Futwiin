@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTeamRequest;
+use App\Http\Requests\UpdateTeamRequest;
 use App\Repositories\TeamRepository;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
-     protected $teamRepo;
+    protected $teamRepo;
 
     public function __construct(TeamRepository $teamRepo)
     {
@@ -22,7 +24,9 @@ class TeamController extends Controller
             'pageName' => 'All Teams',
             'showTableInfo'=> true,
         ];
+
         $teams = $this->teamRepo->getAllTeams();
+
         return view('admin.teams.index', compact('teams','pageData'));
     }
 
@@ -33,20 +37,23 @@ class TeamController extends Controller
             'pageName' => 'Create Team',
             'showTableInfo'=> true,
         ];
+
         return view('admin.teams.create',compact('pageData'));
     }
 
-    public function store(Request $request)
+    public function store(StoreTeamRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255|unique:teams,name'
-        ]);
-
         try {
-            $this->teamRepo->createTeam($data);
-            return redirect()->route('admin.teams.index')->with('success', 'Team created successfully!');
+            $this->teamRepo->create($request->validated());
+
+            return redirect()
+                ->route('admin.teams.index')
+                ->with('success', 'Team created successfully!');
+
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Error creating team: ' . $e->getMessage());
+            return back()
+                ->withInput()
+                ->with('error', 'Error creating team: ' . $e->getMessage());
         }
     }
 
@@ -57,28 +64,33 @@ class TeamController extends Controller
             'pageName' => 'Edit Team',
             'showTableInfo'=> true,
         ];
-        $team = $this->teamRepo->getTeamById(decrypt($id));
+
+        $team = $this->teamRepo->getTeamById($id);
+
         return view('admin.teams.edit', compact('team','pageData'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateTeamRequest $request, $id)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255|unique:teams,name,'.decrypt($id).',uuid'
-        ]);
-
         try {
-            $this->teamRepo->updateTeam(decrypt($id), $data);
-            return redirect()->route('admin.teams.index')->with('success', 'Team updated successfully!');
+            $this->teamRepo->update($request->validated(), $id);
+
+            return redirect()
+                ->route('admin.teams.index')
+                ->with('success', 'Team updated successfully!');
+
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Error updating team: ' . $e->getMessage());
+            return back()
+                ->withInput()
+                ->with('error', 'Error updating team: ' . $e->getMessage());
         }
     }
 
     public function delete($id)
     {
         try {
-            $this->teamRepo->deleteTeam(decrypt($id));
+            $this->teamRepo->deleteTeam($id);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Team deleted successfully!'

@@ -25,7 +25,7 @@
                                     <select class="form-control" id="team_1_id" name="team_1_id" required>
                                         <option value="">Select Team</option>
                                         @foreach($teams as $team)
-                                            <option value="{{ $team->uuid }}" {{ old('team_1_id') == $team->uuid ? 'selected' : '' }}>
+                                            <option value="{{ $team->id }}" {{ old('team_1_id') == $team->id ? 'selected' : '' }}>
                                                 {{ $team->name }}
                                             </option>
                                         @endforeach
@@ -39,7 +39,7 @@
                                     <select class="form-control" id="team_2_id" name="team_2_id" required>
                                         <option value="">Select Team</option>
                                         @foreach($teams as $team)
-                                            <option value="{{ $team->uuid }}" {{ old('team_2_id') == $team->uuid ? 'selected' : '' }}>
+                                            <option value="{{ $team->id }}" {{ old('team_2_id') == $team->id ? 'selected' : '' }}>
                                                 {{ $team->name }}
                                             </option>
                                         @endforeach
@@ -121,8 +121,8 @@
                                                 <td>
                                                     <input type="number"
                                                         class="form-control"
-                                                        name="plan_deductions[{{ $plan->uuid }}]"
-                                                        value="{{ old('plan_deductions.'.$plan->uuid, 0) }}"
+                                                        name="plan_deductions[{{ $plan->id }}]"
+                                                        value="{{ old('plan_deductions.'.$plan->id, 0) }}"
                                                         min="0" required>
                                                 </td>
                                             </tr>

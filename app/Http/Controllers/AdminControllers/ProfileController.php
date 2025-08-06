@@ -3,12 +3,21 @@
 namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+    protected $userRepo;
+
+    public function __construct(UserRepository $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
+
     public function index()
     {
         $pageData = (object)[
@@ -20,31 +29,13 @@ class ProfileController extends Controller
         return view('admin.profile.index', compact('pageData'));
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
-        $user = Auth::user();
-
-        $data = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'current_password' => 'nullable|string|min:8',
-            'new_password' => 'nullable|string|min:8|confirmed',
-        ]);
-
-        $user->first_name = $data['first_name'];
-        $user->last_name = $data['last_name'];
-        $user->email = $data['email'];
-
-        if ($request->filled('current_password') && $request->filled('new_password')) {
-            if (!Hash::check($data['current_password'], $user->password)) {
-                return back()->with('error', 'Current password is incorrect');
-            }
-            $user->password = Hash::make($data['new_password']);
+        try {
+            $this->userRepo->updateProfile($request->validated());
+            return back()->with('success', 'Profile updated successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error updating profile: '.$e->getMessage());
         }
-
-        $user->save();
-
-        return back()->with('success', 'Profile updated successfully!');
     }
 }

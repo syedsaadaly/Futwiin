@@ -24,9 +24,9 @@ class CreateUserPredictionLogsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('pred_id')->references('uuid')->on('pridections')->onDelete('cascade');
+            $table->foreign('pred_id')->references('id')->on('pridections')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('plan_id')->references('uuid')->on('plans')->onDelete('cascade');
+            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
         });
     }
 

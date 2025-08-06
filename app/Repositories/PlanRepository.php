@@ -16,4 +16,5 @@ interface PlanRepository extends RepositoryInterface
     public function deletePlan($id);
     public function getPlanById($id);
     public function getAllPlans();
+    public function getAllOrderedByPrice();
 }

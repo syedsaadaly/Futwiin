@@ -14,13 +14,13 @@ class CreatePredictionDetailsTable extends Migration
     public function up()
     {
         Schema::create('prediction_details', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->uuid('prediction_id');
             $table->uuid('plan_id');
             $table->integer('points_deduction')->default(0);
             $table->timestamps();
-            $table->foreign('prediction_id')->references('uuid')->on('pridections')->onDelete('cascade');
-            $table->foreign('plan_id')->references('uuid')->on('plans')->onDelete('cascade');
+            $table->foreign('prediction_id')->references('id')->on('pridections')->onDelete('cascade');
+            $table->foreign('plan_id')->references('id')->on('plans')->onDelete('cascade');
         });
     }
 

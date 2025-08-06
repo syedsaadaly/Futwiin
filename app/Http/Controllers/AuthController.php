@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +26,7 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('login')->with('success', 'You have been successfully logged out.');
     }
+
     public function showLoginForm()
     {
         return $this->userRepo->showLoginForm();
@@ -33,43 +36,39 @@ class AuthController extends Controller
     {
         return $this->userRepo->showRegistrationForm();
     }
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
 
-        $user = $this->userRepo->login($credentials);
+    public function login(LoginRequest $request)
+    {
+        $user = $this->userRepo->login($request->validated());
 
         if (!$user) {
-            return redirect()->back()->with(['message' => 'Invalid credentials'], 401);
+            return back()
+                ->withInput()
+                ->withErrors(['email' => 'Invalid credentials']);
         }
-        if ($user->hasRole('admin')) {
-            return redirect()->route('admin.dashboard');
-        }elseif ($user->hasRole('user')) {
-            return redirect()->route('user.dashboard');
-        }else{
-            return redirect()->route('front.index');
-        }
-    }
-    public function register(Request $request)
-    {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'email'      => 'required|email|unique:users,email',
-            'password'   => 'required|min:6|confirmed',
-        ]);
 
-        $user = $this->userRepo->register($validated);
+        return match(true) {
+            $user->hasRole('admin') => redirect()->route('admin.dashboard'),
+            $user->hasRole('user') => redirect()->route('user.dashboard'),
+            default => redirect()->route('front.index')
+        };
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        $user = $this->userRepo->register($request->validated());
         $user->assignRole('user');
         auth()->login($user);
 
-        if ($request->has('plan')) {
+        if ($request->filled('plan')) {
             return redirect()->route('payment.show', $request->plan);
         }
 
-        return redirect()->route('front.pricing')->with(['message' => 'Registration successful', 'user' => $user]);
+        return redirect()
+        ->route('front.pricing')
+        ->with([
+            'message' => 'Registration successful',
+            'user' => $user
+        ]);
     }
 }

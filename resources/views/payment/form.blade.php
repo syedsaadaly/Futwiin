@@ -131,7 +131,7 @@
                 document.getElementById('payment-intent-id').value = paymentIntent.id;
 
                 // Submit to server
-                const response = await fetch('{{ route("payment.process", $plan->uuid) }}', {
+                const response = await fetch('{{ route("payment.process", $plan->id) }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

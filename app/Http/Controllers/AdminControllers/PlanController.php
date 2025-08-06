@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePlanRequest;
+use App\Http\Requests\UpdatePlanRequest;
 use App\Repositories\PlanRepository;
 use Illuminate\Http\Request;
 
 class PlanController extends Controller
 {
-      protected $planRepo;
+    protected $planRepo;
 
     public function __construct(PlanRepository $planRepo)
     {
@@ -17,76 +19,87 @@ class PlanController extends Controller
 
     public function index()
     {
-        $pageData = (object)[
+        $pageData = (object) [
             'pageTabTitle' => 'Plans',
             'pageName' => 'All Plan',
             'showTableInfo'=> true,
         ];
+
         $plans = $this->planRepo->getAllPlans();
-        return view('admin.plan.index', compact('plans','pageData'));
+
+        return view('admin.plan.index', compact('plans', 'pageData'));
     }
 
     public function create()
     {
-        $pageData = (object)[
+        $pageData = (object) [
             'pageTabTitle' => 'Create Plans',
             'pageName' => 'Create Plan',
             'showTableInfo'=> true,
         ];
-        return view('admin.plan.create',compact('pageData'));
+
+        return view('admin.plan.create', compact('pageData'));
     }
 
-    public function store(Request $request)
+    public function store(StorePlanRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'text' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'points' => 'required|integer|min:0',
-            'predicted_view_duration_offset' => 'required|integer|min:1|max:10080',
-        ]);
-
         try {
-            $this->planRepo->createPlan($data);
-            return redirect()->route('admin.plans.index')->with('success', 'Plan created successfully!');
+            $this->planRepo->createPlan($request->validated());
+
+            return redirect()
+                ->route('admin.plans.index')
+                ->with('success', 'Plan created successfully!');
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Error creating plan: ' . $e->getMessage());
+            return back()
+                ->withInput()
+                ->with('error', 'Error creating plan: ' . $e->getMessage());
         }
     }
 
     public function edit($id)
     {
-        $pageData = (object)[
+        $pageData = (object) [
             'pageTabTitle' => 'Edit Plans',
             'pageName' => 'Edit Plan',
-            'showTableInfo'=> true,
+            'showTableInfo' => true,
         ];
-        $plan = $this->planRepo->getPlanById(decrypt($id));
-        return view('admin.plan.edit', compact('plan','pageData'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'text' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'points' => 'required|integer|min:0',
-            'predicted_view_duration_offset' => 'required|integer|min:1|max:10080',
-        ]);
 
         try {
-            $this->planRepo->updatePlan(decrypt($id), $data);
-            return redirect()->route('admin.plans.index')->with('success', 'Plan updated successfully!');
+            $plan = $this->planRepo->getPlanById($id);
+            return view('admin.plan.edit', compact('plan', 'pageData'));
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()
+                ->route('admin.plans.index')
+                ->with('error', 'Plan not found');
+
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Error updating plan: ' . $e->getMessage());
+            return redirect()
+                ->route('admin.plans.index')
+                ->with('error', 'Failed to load plan. Please try again.');
+        }
+    }
+
+    public function update(UpdatePlanRequest $request, $id)
+    {
+        try {
+            $this->planRepo->updatePlan($id, $request->validated());
+
+            return redirect()
+                ->route('admin.plans.index')
+                ->with('success', 'Plan updated successfully!');
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Error updating plan: ' . $e->getMessage());
         }
     }
 
     public function delete($id)
     {
         try {
-            $this->planRepo->deletePlan(decrypt($id));
+            $this->planRepo->deletePlan($id);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Plan deleted successfully!'

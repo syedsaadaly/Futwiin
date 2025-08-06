@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Repositories\LeagueRepository;
 use App\Repositories\LeagueRepositoryEloquent;
+use App\Repositories\PaymentRepository;
+use App\Repositories\PaymentRepositoryInterface;
 use App\Repositories\PlanRepository;
 use App\Repositories\PlanRepositoryEloquent;
 use App\Repositories\PridectionRepository;
@@ -43,6 +45,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             PridectionRepository::class,
             PridectionRepositoryEloquent::class
+        );
+        $this->app->bind(
+            PaymentRepositoryInterface::class,
+            PaymentRepository::class
         );
     }
     /**

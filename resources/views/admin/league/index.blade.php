@@ -50,13 +50,13 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.leagues.edit', encrypt_decrypt('encrypt', $league->id)) }}"
+                                            <a href="{{ route('admin.leagues.edit', $league->id) }}"
                                                title="Edit" class="btn btn-info btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
                                             <button class="btn btn-danger btn-sm delete_league"
-                                                data-league-id="{{ encrypt_decrypt('encrypt', $league->id) }}"
+                                                data-league-id="{{ $league->id }}"
                                                 title="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>

@@ -19,10 +19,10 @@ class Team extends Model implements Transformable
 
     use SoftDeletes;
 
-    protected $primaryKey = 'uuid';
+    protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
-
+    
     protected $fillable = ['name'];
 
     protected static function boot()
@@ -36,4 +36,8 @@ class Team extends Model implements Transformable
         });
     }
 
+    public static function getRecentTeams($limit = 5)
+    {
+        return self::latest()->take($limit)->get();
+    }
 }

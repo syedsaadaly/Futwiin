@@ -6,68 +6,62 @@ use App\Http\Controllers\Controller;
 use App\Models\League;
 use App\Models\Plan;
 use App\Models\Pridection;
+use App\Repositories\LeagueRepository;
+use App\Repositories\PlanRepository;
+use App\Repositories\PridectionRepository;
 use Illuminate\Http\Request;
 
 class FrontController extends Controller
 {
+    protected $leagueRepo;
+    protected $predictionRepo;
+    protected $planRepo;
+
+    public function __construct(
+        LeagueRepository $leagueRepo,
+        PridectionRepository $predictionRepo,
+        PlanRepository $planRepo
+    ) {
+        $this->leagueRepo = $leagueRepo;
+        $this->predictionRepo = $predictionRepo;
+        $this->planRepo = $planRepo;
+    }
+
     public function index()
     {
-        $domesticLeagues = League::where('type', 2)
-                        ->orderBy('title')
-                        ->get();
-
-        $internationalLeagues = League::where('type', 1)
-                                    ->orderBy('title')
-                                    ->get();
-        $predictionsQuery = Pridection::with(['team1', 'team2', 'league'])
-            ->where('match_date', '>=', now()->toDateString())
-            ->orderBy('match_date')
-            ->orderBy('match_time');
-
-        if (!auth()->check()) {
-            $predictionsQuery->where('is_teaser', true);
-        }
-
-        $predictions = $predictionsQuery->get();
-        $plans = Plan::orderBy('price')->get();
-
-       return view('front.index',compact('domesticLeagues', 'internationalLeagues','predictions','plans'));
+        return view('front.index', [
+            'domesticLeagues' => $this->leagueRepo->getDomesticLeagues(),
+            'internationalLeagues' => $this->leagueRepo->getInternationalLeagues(),
+            'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
+            'plans' => $this->planRepo->getAllOrderedByPrice()
+        ]);
     }
+
     public function expert()
     {
-        $predictionsQuery = Pridection::with(['team1', 'team2', 'league'])
-            ->where('match_date', '>=', now()->toDateString())
-            ->orderBy('match_date')
-            ->orderBy('match_time');
-
-        if (!auth()->check()) {
-            $predictionsQuery->where('is_teaser', true);
-        }
-
-        $predictions = $predictionsQuery->get();
-        $showRegisterButton = !auth()->check() && Pridection::where('is_teaser', true)->exists();
-
-        return view('front.expert', compact('predictions', 'showRegisterButton'));
+        return view('front.expert', [
+            'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
+            'showRegisterButton' => !auth()->check() && $this->predictionRepo->hasTeaserPredictions()
+        ]);
     }
+
     public function league()
     {
-        $domesticLeagues = League::where('type', 2)
-                                ->orderBy('title')
-                                ->get();
-
-        $internationalLeagues = League::where('type', 1)
-                                    ->orderBy('title')
-                                    ->get();
-
-        return view('front.leagues', compact('domesticLeagues', 'internationalLeagues'));
+        return view('front.leagues', [
+            'domesticLeagues' => $this->leagueRepo->getDomesticLeagues(),
+            'internationalLeagues' => $this->leagueRepo->getInternationalLeagues()
+        ]);
     }
+
     public function pricing()
     {
-       $plans = Plan::orderBy('price')->get();
-       return view('front.pricing',compact('plans'));
+        return view('front.pricing', [
+            'plans' => $this->planRepo->getAllOrderedByPrice()
+        ]);
     }
+
     public function testimonials()
     {
-       return view('front.testimonials');
+        return view('front.testimonials');
     }
 }

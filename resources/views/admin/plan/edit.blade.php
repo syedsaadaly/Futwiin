@@ -10,7 +10,7 @@
                 </div>
                 <div class="card-body">
                     <form name="edit_plan_form" id="edit_plan_form" method="post"
-                          action="{{ route('admin.plans.update', encrypt($plan->uuid)) }}">
+                          action="{{ route('admin.plans.update', $plan->id) }}">
                         @csrf
                         @method('PUT')
                         <div class="row">

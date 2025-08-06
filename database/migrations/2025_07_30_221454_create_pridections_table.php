@@ -14,7 +14,7 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('pridections', function(Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->uuid('id')->primary();
             $table->uuid('team_1_id');
             $table->uuid('team_2_id');
             $table->string('title');
@@ -25,8 +25,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('team_1_id')->references('uuid')->on('teams');
-            $table->foreign('team_2_id')->references('uuid')->on('teams');
+            $table->foreign('team_1_id')->references('id')->on('teams');
+            $table->foreign('team_2_id')->references('id')->on('teams');
 		});
 	}
 

@@ -80,7 +80,7 @@
                             <div class="pick-bottom">
                                 <a href="">82% Success Rate</a>
                                 @if(auth()->check())
-                                <a href="{{ route('prediction.view', $prediction->uuid) }}">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
+                                <a href="{{ route('prediction.view', $prediction->id) }}">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
                                 @else
                                 <a href="{{ route('login') }}">Login for Analysis<i class="fal fa-long-arrow-right"></i></a>
                                 @endif
@@ -656,7 +656,7 @@
                                         <li><i class="far fa-times-circle"></i> Email notifications</li>
                                         <li><i class="far fa-times-circle"></i> Early access to picks</li>
                                     </ul>
-                                    <a href="{{ auth()->check() ? route('payment.show', $plan->uuid) : route('register', ['plan' => $plan->uuid]) }}">
+                                    <a href="{{ auth()->check() ? route('payment.show', $plan->id) : route('register', ['plan' => $plan->id]) }}">
                                         Sign Up & Subscribe
                                     </a>
                                 </div>
