@@ -42,9 +42,9 @@
                                             </button>
                                         </td> --}}
                                         <td>
-                                            <button class="btn btn-danger btn-sm {{ auth()->id() != $user->id ? 'delete_user' : '' }}"
-                                                data-user-id="{{ encrypt_decrypt('encrypt', $user->id) }}"
-                                                title="{{ auth()->id() == $user->id ? 'This account is currently logged in, and therefore cannot be deleted.' : "Delete" }}">
+                                            <button class="btn btn-danger btn-sm delete-user-btn"
+                                                data-user-id="{{ $user->id }}"
+                                                data-is-current="{{ auth()->id() == $user->id ? 'true' : 'false' }}">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </td>
@@ -107,20 +107,57 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', '.delete_user', function() {
-        let user_id = $(this).attr('data-user-id');
-        if (user_id) {
-            if(confirm('Are you sure you want to delete this user?')) {
-                let deleteUrl = "{{ route('admin.deleteUser', ['id' => '__USER_ID__']) }}".replace('__USER_ID__', user_id);
+    $(document).on('click', '.delete-user-btn', function() {
+        const userId = $(this).data('user-id');
+        const isCurrentUser = $(this).data('is-current') == true;
+        
+        if (isCurrentUser) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Cannot Delete Account',
+                text: 'You cannot delete your own account while logged in.',
+                confirmButtonColor: '#d33',
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const deleteUrl = "{{ route('admin.deleteUser', ['id' => '__USER_ID__']) }}".replace('__USER_ID__', userId);
+
                 $.ajax({
                     url: deleteUrl,
                     method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: function(response) {
-                        location.reload();
+                        Swal.fire(
+                            'Deleted!',
+                            'User has been deleted.',
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to delete user.',
+                            'error'
+                        );
                     }
                 });
             }
-        }
+        });
     });
 
     $('#create_user_form').on('submit', function(e) {

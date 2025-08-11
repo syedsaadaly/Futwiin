@@ -25,8 +25,6 @@ class PlanRepositoryEloquent extends BaseRepository implements PlanRepository
         return Plan::class;
     }
 
-
-
     /**
      * Boot up the repository, pushing criteria
      */
@@ -34,6 +32,7 @@ class PlanRepositoryEloquent extends BaseRepository implements PlanRepository
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
+
     public function getAllPlans()
     {
         return Plan::orderBy('created_at', 'desc')->get();
@@ -41,7 +40,7 @@ class PlanRepositoryEloquent extends BaseRepository implements PlanRepository
 
     public function getPlanById($id)
     {
-        return Plan::where('uuid', $id)->firstOrFail();
+        return Plan::where('id', $id)->firstOrFail();
     }
 
     public function createPlan(array $data)
@@ -51,8 +50,9 @@ class PlanRepositoryEloquent extends BaseRepository implements PlanRepository
 
     public function updatePlan($id, array $data)
     {
-        $plan = $this->getPlanById($id);
+        $plan = $this->findOrFail($id);
         $plan->update($data);
+
         return $plan;
     }
 
@@ -60,6 +60,11 @@ class PlanRepositoryEloquent extends BaseRepository implements PlanRepository
     {
         $plan = $this->getPlanById($id);
         return $plan->delete();
+    }
+    
+    public function getAllOrderedByPrice()
+    {
+        return Plan::orderBy('price')->get();
     }
 
 }

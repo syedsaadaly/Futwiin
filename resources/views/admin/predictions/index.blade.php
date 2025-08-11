@@ -54,13 +54,13 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('admin.predictions.edit', encrypt($prediction->uuid)) }}"
+                                            <a href="{{ route('admin.predictions.edit', $prediction->id) }}"
                                                title="Edit" class="btn btn-info btn-sm">
                                                 <i class="fas fa-edit"></i>
                                             </a>
 
                                             <button class="btn btn-danger btn-sm delete_prediction"
-                                                data-prediction-id="{{ encrypt($prediction->uuid) }}"
+                                                data-prediction-id="{{ $prediction->id }}"
                                                 title="Delete">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>

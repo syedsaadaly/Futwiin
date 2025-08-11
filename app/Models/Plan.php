@@ -26,7 +26,7 @@ class Plan extends Model implements Transformable
     protected $fillable = ['name','text','price','predicted_view_duration_offset','points'];
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $primaryKey = 'uuid';
+    protected $primaryKey = 'id';
 
     protected static function boot()
     {
@@ -38,9 +38,15 @@ class Plan extends Model implements Transformable
             }
         });
     }
+
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public static function getRecentPlans($limit = 5)
+    {
+        return self::latest()->take($limit)->get();
     }
 
 }

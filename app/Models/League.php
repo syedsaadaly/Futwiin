@@ -39,4 +39,8 @@ class League extends Model implements Transformable , HasMedia
         });
     }
 
+    public static function getRecentLeagues($limit = 5)
+    {
+        return self::latest()->take($limit)->get();
+    }
 }

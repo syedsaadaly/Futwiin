@@ -56,7 +56,7 @@ use Illuminate\Support\Facades\Route;
             Route::get('/', [LeagueController::class, 'index'])->name('admin.leagues.index');
             Route::get('/create', [LeagueController::class, 'create'])->name('admin.leagues.create');
             Route::post('/store', [LeagueController::class, 'store'])->name('admin.leagues.store');
-            Route::get('/get/{id}', [LeagueController::class, 'get'])->name('admin.leagues.edit');
+            Route::get('/edit/{id}', [LeagueController::class, 'edit'])->name('admin.leagues.edit');
             Route::put('/update/{id}', [LeagueController::class, 'update'])->name('admin.leagues.update');
             Route::delete('/delete/{id}', [LeagueController::class, 'delete'])->name('admin.leagues.delete');
         });

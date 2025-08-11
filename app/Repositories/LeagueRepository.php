@@ -12,9 +12,10 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 interface LeagueRepository extends RepositoryInterface
 {
     public function indexPage();
-    public function createPage();
-    public function leagueStore($request);
-    public function editPage($id);
-    public function updateLeague($request , $id);
+    public function leagueStore(array $validatedData, $imageFile = null);
+    public function findLeagueById($id);
+    public function updateLeague(array $validatedData, $id, $imageFile = null);
     public function deleteLeague($id);
+    public function getDomesticLeagues();
+    public function getInternationalLeagues();
 }

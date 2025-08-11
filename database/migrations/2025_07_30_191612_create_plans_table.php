@@ -14,7 +14,7 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('plans', function(Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->text('text')->nullable();
             $table->decimal('price', 10, 2);

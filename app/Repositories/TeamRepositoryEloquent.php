@@ -30,14 +30,14 @@ class TeamRepositoryEloquent extends BaseRepository implements TeamRepository
         $this->pushCriteria(app(RequestCriteria::class));
     }
 
-     public function getAllTeams()
+    public function getAllTeams()
     {
         return Team::orderBy('created_at', 'desc')->get();
     }
 
     public function getTeamById($id)
     {
-        return Team::where('uuid', $id)->firstOrFail();
+        return Team::where('id', $id)->firstOrFail();
     }
 
     public function createTeam(array $data)
@@ -47,9 +47,7 @@ class TeamRepositoryEloquent extends BaseRepository implements TeamRepository
 
     public function updateTeam($id, array $data)
     {
-        $team = $this->getTeamById($id);
-        $team->update($data);
-        return $team;
+        return $this->update($data, $id);
     }
 
     public function deleteTeam($id)
@@ -57,5 +55,4 @@ class TeamRepositoryEloquent extends BaseRepository implements TeamRepository
         $team = $this->getTeamById($id);
         return $team->delete();
     }
-
 }

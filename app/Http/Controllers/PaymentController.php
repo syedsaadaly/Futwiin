@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Plan;
 use App\Models\UserPayment;
 use App\Models\UserPlan;
+use App\Repositories\PaymentRepositoryInterface;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
@@ -12,6 +13,13 @@ use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
+    protected $paymentRepo;
+
+    public function __construct(PaymentRepositoryInterface $paymentRepo)
+    {
+        $this->paymentRepo = $paymentRepo;
+    }
+
     public function showPaymentForm($planId)
     {
         if (!auth()->check()) {
@@ -27,8 +35,8 @@ class PaymentController extends Controller
             'currency' => 'usd',
             'description' => $plan->name . ' subscription',
             'metadata' => [
-                'plan_id' => $plan->uuid,
-                'user_id' => auth()->user()->uuid
+                'plan_id' => $plan->id,
+                'user_id' => auth()->user()->id
             ],
         ]);
 
@@ -56,9 +64,8 @@ class PaymentController extends Controller
                 ], 400);
             }
 
-            $payment = UserPayment::create([
-                'uuid' => Str::uuid(),
-                'plan_id' => $plan->uuid,
+            $this->paymentRepo->createPayment([
+                'plan_id' => $plan->id,
                 'user_id' => $user->id,
                 'price' => $plan->price,
                 'payment_mode' => 'stripe',
@@ -67,19 +74,20 @@ class PaymentController extends Controller
             ]);
 
             $oldWallet = $user->wallet;
-            $user->wallet += $plan->points;
-            $user->plan_id = $plan->uuid;
+            $user = $this->paymentRepo->updateUserWallet($user->id, $plan->points);
+            $user->plan_id = $plan->id;
             $user->save();
 
-            UserPlan::create([
-                'uuid' => Str::uuid(),
-                'plan_id' => $plan->uuid,
+            $this->paymentRepo->createUserPlan([
+                'plan_id' => $plan->id,
                 'user_id' => $user->id,
                 'price' => $plan->price,
                 'old_wallet' => $oldWallet,
                 'new_wallet' => $user->wallet,
             ]);
+
             session()->flash('plan', $plan);
+
             return response()->json([
                 'success' => true,
                 'redirect_url' => route('payment.success')

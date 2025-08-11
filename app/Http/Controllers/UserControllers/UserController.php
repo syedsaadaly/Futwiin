@@ -3,12 +3,21 @@
 namespace App\Http\Controllers\UserControllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    protected $userRepo;
+
+    public function __construct(UserRepository $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
+
     public function dashboard()
     {
         $pageData = (object)[
@@ -18,6 +27,7 @@ class UserController extends Controller
         ];
         return view('user.dashboard.dashboard-2',compact('pageData'));
     }
+
     public function profileEditPage()
     {
          $pageData = (object)[
@@ -28,31 +38,14 @@ class UserController extends Controller
 
         return view('user.profile.index', compact('pageData'));
     }
-    public function profileUpdate(Request $request)
+
+    public function profileUpdate(UpdateProfileRequest $request)
     {
-        $user = Auth::user();
-
-        $data = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'current_password' => 'nullable|string|min:8',
-            'new_password' => 'nullable|string|min:8|confirmed',
-        ]);
-
-        $user->first_name = $data['first_name'];
-        $user->last_name = $data['last_name'];
-        $user->email = $data['email'];
-
-        if ($request->filled('current_password') && $request->filled('new_password')) {
-            if (!Hash::check($data['current_password'], $user->password)) {
-                return back()->with('error', 'Current password is incorrect');
-            }
-            $user->password = Hash::make($data['new_password']);
+        try {
+            $this->userRepo->updateProfile($request->validated());
+            return back()->with('success', 'Profile updated successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error updating profile: '.$e->getMessage());
         }
-
-        $user->save();
-
-        return back()->with('success', 'Profile updated successfully!');
     }
 }

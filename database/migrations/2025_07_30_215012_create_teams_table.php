@@ -14,7 +14,7 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('teams', function(Blueprint $table) {
-            $table->uuid('uuid')->primary();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();

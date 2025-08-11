@@ -9,40 +9,28 @@ use App\Models\Pridection;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\UserPlan;
+use App\Repositories\UserRepositoryEloquent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+    protected $adminRepo;
+
+    public function __construct(UserRepositoryEloquent $adminRepo)
+    {
+        $this->adminRepo = $adminRepo;
+    }
+
     public function dashboard(Request $request)
     {
-        $user = Auth::user();
-
-        $stats = [
-            'users' => User::count(),
-            'active_users' => User::whereNull('deleted_at')->count(),
-            'plans' => Plan::count(),
-            'active_plans' => Plan::whereNull('deleted_at')->count(),
-            'predictions' => Pridection::count(),
-            'upcoming_predictions' => Pridection::where('match_date', '>=', now())->count(),
-            'leagues' => League::count(),
-            'active_leagues' => League::where('league_date', '>=', now())->count(),
-            'teams' => Team::count(),
-            'active_user_plans' => UserPlan::count(),
-        ];
-
-        $recentUsers = User::latest()->take(5)->get();
-        $recentPlans = Plan::latest()->take(5)->get();
-        $recentPredictions = Pridection::with(['team1', 'team2'])
-            ->latest()
-            ->take(5)
-            ->get();
-        $recentLeagues = League::latest()->take(5)->get();
-        $recentTeams = Team::latest()->take(5)->get();
-        $recentUserPlans = UserPlan::with(['user', 'plan'])
-            ->latest()
-            ->take(5)
-            ->get();
+        $stats = $this->adminRepo->getStats();
+        $recentUsers = $this->adminRepo->getRecentUsers(5);
+        $recentPlans = $this->adminRepo->getRecentPlans(5);
+        $recentPredictions = $this->adminRepo->getRecentPredictions(5);
+        $recentLeagues = $this->adminRepo->getRecentLeagues(5);
+        $recentTeams = $this->adminRepo->getRecentTeams(5);
+        $recentUserPlans = $this->adminRepo->getRecentUserPlans(5);
 
         $pageData = (object)[
             'pageTabTitle' => 'Admin Dashboard',
@@ -50,17 +38,18 @@ class AdminController extends Controller
             'showTableInfo' => false,
         ];
 
-        return view('admin.dashboard.dashboard-2', compact(
-            'pageData',
-            'stats',
-            'recentUsers',
-            'recentPlans',
-            'recentPredictions',
-            'recentLeagues',
-            'recentTeams',
-            'recentUserPlans'
-        ));
+        return view('admin.dashboard.dashboard-2', [
+            'pageData' => $pageData,
+            'stats' => $stats,
+            'recentUsers' => $recentUsers,
+            'recentPlans' => $recentPlans,
+            'recentPredictions' => $recentPredictions,
+            'recentLeagues' => $recentLeagues,
+            'recentTeams' => $recentTeams,
+            'recentUserPlans' => $recentUserPlans,
+        ]);
     }
+
     public function users(Request $request)
     {
         $pageData = (object)[
@@ -69,20 +58,19 @@ class AdminController extends Controller
             'showTableInfo'=> true,
         ];
 
-        $users = User::with('roles')->orderBy('created_at', 'desc')->get();
+        $users = $this->adminRepo->getAllUsers();
 
         return view('admin.user.index', compact('pageData', 'users'));
     }
 
     public function deleteUser(Request $request, $id)
     {
-        try {
-            $user = User::findOrFail(encrypt_decrypt('decrypt', $id));
+       try {
+            $this->adminRepo->deleteUserById($id);
 
-            $user->forceDelete();
-
-            return response()->json(['status' => 'success', 'message' => 'User and associated orders has been deleted successfully.']);
+            return response()->json(['status' => 'success', 'message' => 'User has been deleted successfully.']);
         } catch (\Exception $e) {
+
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 400);
         }
     }
