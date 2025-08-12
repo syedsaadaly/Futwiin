@@ -37,12 +37,18 @@ class FrontController extends Controller
         ]);
     }
 
-    public function expert()
+    public function expert($id = null)
     {
-        return view('front.expert', [
-            'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
-            'showRegisterButton' => !auth()->check() && $this->predictionRepo->hasTeaserPredictions()
-        ]);
+        if($id) {
+            $predictions = $this->predictionRepo->getUpcomingPredictionsByLeague($id, !auth()->check());
+            $showRegisterButton = false;
+            return view('front.expert', compact('predictions','showRegisterButton'));
+        } else {
+            return view('front.expert', [
+                'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
+                'showRegisterButton' => !auth()->check() && $this->predictionRepo->hasTeaserPredictions()
+            ]);
+        }
     }
 
     public function league()

@@ -68,20 +68,54 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="match_date" class="form-label">Match Date*</label>
                                     <input type="date" class="form-control" id="match_date" name="match_date"
-                                           value="{{ old('match_date') }}" required
-                                           min="{{ now()->format('Y-m-d') }}">
+                                        value="{{ old('match_date') }}" required
+                                        min="{{ now()->format('Y-m-d') }}">
                                 </div>
                             </div>
 
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="match_time" class="form-label">Start Time*</label>
+                                    <input type="time" class="form-control" id="match_time" name="match_time"
+                                        value="{{ old('match_time', '19:00') }}" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="timezone" class="form-label">Timezone*</label>
+                                    <select class="form-control" id="timezone" name="timezone" required>
+                                        <option value="UTC" {{ old('timezone') == 'UTC' ? 'selected' : '' }}>UTC</option>
+                                        <option value="Europe/London" {{ old('timezone') == 'Europe/London' ? 'selected' : '' }}>GMT</option>
+                                        <option value="America/New_York" {{ old('timezone') == 'America/New_York' ? 'selected' : '' }}>EST</option>
+                                        <option value="Europe/Belfast" {{ old('timezone') == 'Europe/Belfast' ? 'selected' : '' }}>BST</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="match_time" class="form-label">Match Time*</label>
-                                    <input type="time" class="form-control" id="match_time" name="match_time"
-                                           value="{{ old('match_time', '19:00') }}" required>
+                                    <label for="end_time" class="form-label">End Time*</label>
+                                    <input type="time" class="form-control" id="end_time" name="end_time"
+                                           value="{{ old('end_time', '20:00') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="league_id" class="form-label">Leagues*</label>
+                                    <select class="form-control" id="league_id" name="league_id" required>
+                                        <option value="">Select League</option>
+                                        @foreach($leagues as $league)
+                                            <option value="{{ $league->id }}" {{ old('league_id') == $league->id ? 'selected' : '' }}>
+                                                {{ $league->title ?? '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +129,15 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="teaser_text" class="form-label">Teaser Text</label>
+                                    <textarea class="form-control" id="teaser_text" name="teaser_text" rows="5" required
+                                              placeholder="Enter detailed prediction analysis">{{ old('teaser_text') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group ml-3">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" id="is_teaser" name="is_teaser"

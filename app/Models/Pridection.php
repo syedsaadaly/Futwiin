@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Prettus\Repository\Contracts\Transformable;
@@ -30,7 +31,11 @@ class Pridection extends Model implements Transformable, HasMedia
         'match_date',
         'match_time',
         'text',
-        'is_teaser'
+        'teaser_text',
+        'is_teaser',
+        'league_id',
+        'end_time',
+        'timezone',
     ];
 
     protected $dates = ['match_date'];
@@ -82,5 +87,30 @@ class Pridection extends Model implements Transformable, HasMedia
     public static function getRecentPredictions($limit = 5)
     {
         return self::with(['team1', 'team2'])->latest()->take($limit)->get();
+    }
+
+    public function isLive()
+    {
+        $timezone = config('app.timezone', 'Asia/Karachi');
+        $now = Carbon::now($timezone);
+        $matchTime = Carbon::createFromFormat('Y-m-d H:i:s', $this->match_date->format('Y-m-d') . ' ' . $this->match_time, $timezone);
+
+        $endTime = $this->end_time
+            ? Carbon::createFromFormat('Y-m-d H:i:s', $this->match_date->format('Y-m-d') . ' ' . $this->end_time, $timezone)
+            : $matchTime->copy()->addHours(2);
+
+        return $now->between($matchTime, $endTime);
+    }
+
+    public function getTimezoneAbbreviation()
+    {
+        $map = [
+            'UTC' => 'UTC',
+            'Europe/London' => 'GMT',
+            'America/New_York' => 'EST',
+            'Europe/Belfast' => 'BST'
+        ];
+
+        return $map[$this->timezone] ?? 'UTC';
     }
 }

@@ -26,12 +26,12 @@ use Illuminate\Support\Facades\Route;
 
     Route::name('front.')->group(function(){
       Route::get('/',[FrontController::class,'index'])->name('index');
-      Route::get('/expert',[FrontController::class,'expert'])->name('expert');
+      Route::get('/expert/{id?}',[FrontController::class,'expert'])->name('expert');
       Route::get('/leagues',[FrontController::class,'league'])->name('leagues');
       Route::get('/pricing',[FrontController::class,'pricing'])->name('pricing');
       Route::get('/testimonials',[FrontController::class,'testimonials'])->name('testimonials');
     });
-    Route::get('/prediction/{prediction}/view', [PridectionController::class, 'checkAccess'])
+    Route::get('/predictions/{prediction}', [PridectionController::class, 'checkAccess'])
     ->name('prediction.view')
     ->middleware('auth');
     Route::get('/payment/success', [PaymentController::class, 'paymentSuccess'])->name('payment.success');

@@ -60,9 +60,11 @@
                                             <li><i class="far fa-check-circle"></i> 90% prediction accuracy</li>
                                             <li><i class="far fa-check-circle"></i> 380 matches per season</li>
                                         </ul>
-                                        @guest
+                                        @if (Auth::check())
+                                        <a href="{{  route('front.expert', ['id' => $league->id]) }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
+                                        @else
                                         <a href="{{ route('register') }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
-                                        @endguest
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -103,9 +105,11 @@
                                             <li><i class="far fa-check-circle"></i> 90% prediction accuracy</li>
                                             <li><i class="far fa-check-circle"></i> 380 matches per season</li>
                                         </ul>
-                                        @guest
+                                        @if (Auth::check())
+                                        <a href="{{  route('front.expert', ['id' => $league->id]) }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
+                                        @else
                                         <a href="{{ route('register') }}" class="btn btn-success">Get {{ $league->title }} Picks</a>
-                                        @endguest
+                                        @endif
                                     </div>
                                 </div>
                             </div>
