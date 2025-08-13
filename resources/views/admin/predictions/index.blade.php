@@ -1,5 +1,14 @@
 @extends('admin.layouts.admin')
 @section('content')
+<style>
+    .custom-badge{
+        padding-left: 44px;
+        padding-right: 44px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+        background: #000;
+    }
+</style>
     <div class="row">
         <div class="col-12">
             <div class="card card-primary" data-aos="fade-up" data-aos-duration="1000">
@@ -22,7 +31,9 @@
                                     <tr>
                                         <th>Teams</th>
                                         <th>Title</th>
+                                        <th>League</th>
                                         <th>Match Date/Time</th>
+                                        <th>End Time</th>
                                         <th>Image</th>
                                         <th>Teaser</th>
                                         <th>Actions</th>
@@ -36,8 +47,14 @@
                                         </td>
                                         <td>{{ $prediction->title }}</td>
                                         <td>
+                                            {{ $prediction->league->title ?? '-'}}
+                                        </td>
+                                        <td>
                                             {{ $prediction->match_date->format('d M Y') }}<br>
                                             {{ $prediction->match_time }}
+                                        </td>
+                                        <td>
+                                            {{ $prediction->end_time ?? '-' }}
                                         </td>
                                         <td>
                                             @if($prediction->hasMedia('prediction_images'))
@@ -50,7 +67,7 @@
                                             @if($prediction->is_teaser)
                                                 <span class="badge badge-success">Yes</span>
                                             @else
-                                                <span class="badge badge-secondary">No</span>
+                                                <span class="badge badge-secondary custom-badge">No</span>
                                             @endif
                                         </td>
                                         <td>

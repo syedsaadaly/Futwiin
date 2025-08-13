@@ -33,7 +33,11 @@ class UpdatePredictionRequest extends FormRequest
             'is_teaser' => 'required|boolean',
             'image' => 'nullable|image|max:2048',
             'plan_deductions' => 'required|array',
-            'plan_deductions.*' => 'integer|min:0'
+            'plan_deductions.*' => 'integer|min:0',
+            'league_id' => 'required|exists:leagues,id',
+            'teaser_text' => 'nullable|string|max:255',
+            'end_time' => 'nullable',
+            'timezone' => 'required',
         ];
     }
 

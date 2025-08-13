@@ -9,6 +9,7 @@ use App\Models\Plan;
 use App\Models\Pridection;
 use App\Models\Team;
 use App\Models\UserPredictionLog;
+use App\Repositories\LeagueRepository;
 use App\Repositories\PlanRepository;
 use App\Repositories\PridectionRepository;
 use App\Repositories\TeamRepository;
@@ -21,15 +22,18 @@ class PridectionController extends Controller
     protected $predictionRepo;
     protected $teamRepo;
     protected $planRepo;
+    protected $leagueRepo;
 
     public function __construct(
         PridectionRepository $predictionRepo,
         TeamRepository $teamRepo,
-        PlanRepository $planRepo
+        PlanRepository $planRepo,
+        LeagueRepository $leagueRepo,
     ) {
         $this->predictionRepo = $predictionRepo;
         $this->teamRepo = $teamRepo;
         $this->planRepo = $planRepo;
+        $this->leagueRepo = $leagueRepo;
     }
 
     public function index()
@@ -55,8 +59,9 @@ class PridectionController extends Controller
 
         $teams = $this->teamRepo->getAllTeams();
         $plans = $this->planRepo->getAllPlans();
+        $leagues = $this->leagueRepo->getAllLeagues();
 
-        return view('admin.predictions.create', compact('teams', 'pageData', 'plans'));
+        return view('admin.predictions.create', compact('teams', 'pageData', 'plans','leagues'));
     }
 
     public function store(StorePredictionRequest $request)
@@ -98,12 +103,14 @@ class PridectionController extends Controller
             $prediction = $this->predictionRepo->getPredictionById($id);
             $teams = $this->teamRepo->getAllTeams();
             $plans = $this->planRepo->getAllPlans();
+            $leagues = $this->leagueRepo->getAllLeagues();
 
             return view('admin.predictions.edit', compact(
                 'prediction',
                 'teams',
                 'pageData',
-                'plans'
+                'plans',
+                'leagues'
             ));
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -175,12 +182,28 @@ class PridectionController extends Controller
             $result = $this->predictionRepo->checkPredictionAccess($prediction);
 
             if (!$result['success']) {
-                return back()->with('error', $result['message']);
+                return response()->json([
+                    'success' => false,
+                    'message' => $result['message'],
+                    'redirect' => !auth()->user()->plan_id ? route('front.pricing') : null
+                ]);
             }
 
-            return redirect()->back()->with('success', 'Prediction accessed successfully!');
+            $html = view('front.partial.modal_content', [
+                'prediction' => $prediction,
+                'details' => $this->predictionRepo->getPredictionDetail($prediction, auth()->user()->plan_id)
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html
+            ]);
+
         } catch (\Exception $e) {
-            return back()->with('error', 'An error occurred: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

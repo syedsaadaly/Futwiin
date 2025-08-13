@@ -118,7 +118,7 @@ class LeagueRepositoryEloquent extends BaseRepository implements LeagueRepositor
             throw $e;
         }
     }
-    
+
     public function getDomesticLeagues()
     {
         return League::where('type', 2)
@@ -131,5 +131,10 @@ class LeagueRepositoryEloquent extends BaseRepository implements LeagueRepositor
         return League::where('type', 1)
             ->orderBy('title')
             ->get();
+    }
+
+    public function getAllLeagues()
+    {
+        return League::orderBy('created_at', 'desc')->get();
     }
 }

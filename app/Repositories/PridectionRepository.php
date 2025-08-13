@@ -19,4 +19,5 @@ interface PridectionRepository extends RepositoryInterface
     public function checkPredictionAccess($prediction);
     public function getUpcomingPredictions(bool $teaserOnly = false);
     public function hasTeaserPredictions(): bool;
+    public function getPredictionDetail($prediction, $planUuid);
 }

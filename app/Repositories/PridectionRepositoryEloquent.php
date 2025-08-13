@@ -143,7 +143,7 @@ class PridectionRepositoryEloquent extends BaseRepository implements PridectionR
         return ['success' => true];
     }
 
-    protected function getPredictionDetail($prediction, $planUuid)
+    public function getPredictionDetail($prediction, $planUuid)
     {
         return $prediction->details()
             ->where('plan_id', $planUuid)
@@ -233,4 +233,18 @@ class PridectionRepositoryEloquent extends BaseRepository implements PridectionR
     {
         return Pridection::where('is_teaser', true)->exists();
     }
+
+    public function getUpcomingPredictionsByLeague($leagueId, $guestOnly = false)
+    {
+        $query = Pridection::where('league_id', $leagueId)
+            ->whereDate('match_date', '>=', now())
+            ->orderBy('match_date', 'asc');
+
+        if ($guestOnly) {
+            $query->where('is_teaser', true);
+        }
+
+        return $query->get();
+    }
+
 }
