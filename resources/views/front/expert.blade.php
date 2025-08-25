@@ -81,7 +81,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2>Expert Picks</h2>
+                    <h2>{{ $cmsContent->banner_title ?? 'Expert Picks' }}</h2>
                 </div>
             </div>
         </div>
@@ -91,9 +91,11 @@
    <section class="pick-sec Expert-pick">
         <div class="container">
             <div class="pick-top text-center" data-aos="fade-up" data-duration="4000">
-                <h2 class="mainHead">Today's Featured Picks</h2>
-                <p>Preview our expert predictions for today's matches. Full analysis and detailed picks are available for premium members.</p>
-            </div>
+            <h2>{{ $cmsContent->main_heading ?? 'Todays Featured Picks' }}</h2>
+
+            <p>{{ $cmsContent->main_paragraph ?? 'Preview our expert predictions...' }}</p>
+
+        </div>
             <div class="row justify-content-center" data-aos="fade-up" data-duration="4000">
                 @forelse($predictions as $prediction)
                 <div class="col-md-4">

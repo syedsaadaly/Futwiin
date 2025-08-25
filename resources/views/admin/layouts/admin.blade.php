@@ -159,10 +159,14 @@
                         <div class="col-sm-6">
                             @isset($pageData->showTableInfo)
                                 @if ($pageData->showTableInfo == false)
-                                    <h1 class="m-0">{{ $pageData->pageName }}</h1>
+                                    {{-- <h1 class="m-0">{{ $pageData ?? '' }}</h1> --}}
+                                    <h1 class="m-0">{{ $pageData->title ?? '' }}</h1>
+
                                 @endif
                             @else
-                                <h1 class="m-0">{{ $pageData->pageName }}</h1>
+                                {{-- <h1 class="m-0">{{ $pageData ?? '' }}</h1> --}}
+                                <h1 class="m-0">{{ $pageData->title ?? '' }}</h1>
+
                             @endisset
                         </div>
                     </div>

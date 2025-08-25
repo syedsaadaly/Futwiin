@@ -25,7 +25,6 @@ class LeagueController extends Controller
 
         $pageData = $data->pageData;
         $leagues = $data->leagues;
-
         return view('admin.league.index', compact('pageData', 'leagues'));
        } catch(Exception $e) {
             return back()->withInput()
@@ -71,7 +70,6 @@ class LeagueController extends Controller
                 'pageName' => 'All League',
                 'showTableInfo' => true,
             ];
-
             return view('admin.league.edit', compact('league', 'pageData'));
 
         } catch (\Exception $e) {

@@ -1212,3 +1212,7 @@ label:not(.form-check-label):not(.custom-file-label) {
     color: white;
     background: black !important;
 }
+
+.card-header.text-black {
+  background-color: #000 !important;
+}

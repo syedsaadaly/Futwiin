@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\FrontControllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\CmsPage;
 use App\Models\League;
 use App\Models\Plan;
 use App\Models\Pridection;
@@ -10,6 +11,11 @@ use App\Repositories\LeagueRepository;
 use App\Repositories\PlanRepository;
 use App\Repositories\PridectionRepository;
 use Illuminate\Http\Request;
+use App\Models\Testimonial;
+use App\Models\FeaturedPlayer;
+use App\Models\HowItWork;
+use App\Models\TwitterSection;
+use App\Models\TwitterItem;
 
 class FrontController extends Controller
 {
@@ -26,48 +32,154 @@ class FrontController extends Controller
         $this->predictionRepo = $predictionRepo;
         $this->planRepo = $planRepo;
     }
+public function index()
+{
+    // Home Banner
+    $homeBanner = CmsPage::where('slug', 'home-banner')->first();
+    $banner = (object) ($homeBanner ? json_decode($homeBanner->content, true) : []);
 
-    public function index()
-    {
-        return view('front.index', [
-            'domesticLeagues' => $this->leagueRepo->getDomesticLeagues(),
-            'internationalLeagues' => $this->leagueRepo->getInternationalLeagues(),
-            'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
-            'plans' => $this->planRepo->getAllOrderedByPrice()
-        ]);
-    }
+    // Featured Picks
+    $featuredPicks = CmsPage::where('slug', 'featured-picks')->first();
+    $picks = (object) ($featuredPicks ? json_decode($featuredPicks->content, true) : []);
 
+    // Featured Players CMS Section
+    $players = CmsPage::where('slug', 'featured-players')->first();
+    $players = (object) ($players ? json_decode($players->content, true) : []);
+
+    // Featured Players List from DB
+    $playersList = FeaturedPlayer::all();
+    $howItWork = HowItWork::all();
+
+        // How It Works Section
+    // $howItWorks = CmsPage::where('slug', 'how-it-works')->first();
+    // $howItWorks = (object) ($howItWorks ? json_decode($howItWorks->content, true) : []);
+    // $howItWorksItems = \App\Models\HowItWorks::all();
+    $howItWorks = CmsPage::where('slug', 'how-it-works')->first();
+$howItWorks = (object) ($howItWorks ? json_decode($howItWorks->content, true) : []);
+$howItWorksItems = \App\Models\HowItWork::all(); // DB se items fetch
+    
+
+    // Twitter Section CMS
+   $twitterSection = TwitterSection::first();
+    $twitterItems = $twitterSection ? $twitterSection->items : collect();
+
+      // Members Section
+    $members = CmsPage::where('slug', 'members-section')->first();
+    $members = (object) ($members ? json_decode($members->content, true) : []);
+    $memberPoints = \App\Models\MemberPoint::all();
+
+    $sayingCms = CmsPage::where('slug', 'saying')->first();
+$sayingCms = (object) ($sayingCms ? json_decode($sayingCms->content, true) : []);
+
+// Saying cards from DB
+$sayingList = \App\Models\Saying::all();
+
+    $successStories = CmsPage::where('slug', 'success-stories')->first();
+$successStories = (object) ($successStories ? json_decode($successStories->content, true) : []);
+
+    return view('front.index', [
+        'domesticLeagues' => $this->leagueRepo->getDomesticLeagues(),
+        'internationalLeagues' => $this->leagueRepo->getInternationalLeagues(),
+        'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
+        'plans' => $this->planRepo->getAllOrderedByPrice(),
+        'banner' => $banner,
+        'picks' => $picks,
+        'players' => $players,
+        'playersList' => $playersList, 
+        // 'howItWorksItems' => $howItWork,
+        'howItWorks' => $howItWorks,
+    'howItWorksItems' => $howItWorksItems,
+        'members' => $members,
+        'memberPoints' => $memberPoints,
+        'twitterSection' => $twitterSection,
+        'twitterItems' => $twitterItems,
+        'sayingCms' => $sayingCms,
+    'sayingList' => $sayingList,
+        'successStories' => $successStories,
+    ]);
+}
+
+
+    // public function expert($id = null)
+    // {
+    //     $cmsPage = CmsPage::where('name', 'expertPicks')->first();
+
+
+
+    //     if($id) {
+    //         $predictions = $this->predictionRepo->getUpcomingPredictionsByLeague($id, !auth()->check());
+    //         $showRegisterButton = false;
+    //         return view('front.expert', compact('predictions','showRegisterButton'));
+    //     } else {
+    //         return view('front.expert', [
+    //             'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
+    //             'showRegisterButton' => !auth()->check() && $this->predictionRepo->hasTeaserPredictions()
+    //         ]);
+    //     }
+    // }
     public function expert($id = null)
     {
-        if($id) {
-            $predictions = $this->predictionRepo->getUpcomingPredictionsByLeague($id, !auth()->check());
-            $showRegisterButton = false;
-            return view('front.expert', compact('predictions','showRegisterButton'));
+        $cmsPage = CmsPage::where('name', 'expertPicks')->first();
+
+        $viewData = [
+            'cmsContent' => $cmsPage ? json_decode($cmsPage->content) : (object)[
+                'banner_title' => 'Expert Picks',
+                'main_heading' => "Today's Featured Picks",
+                'main_paragraph' => 'Preview our expert predictions for today\'s matches...'
+            ],
+            'metaTitle' => $cmsPage->meta_title ?? "Today's Featured Picks",
+            'metaDescription' => $cmsPage->meta_description ?? 'Preview our expert predictions for today\'s matches'
+        ];
+
+        if ($id) {
+            $viewData['predictions'] = $this->predictionRepo->getUpcomingPredictionsByLeague($id, !auth()->check());
+            $viewData['showRegisterButton'] = false;
         } else {
-            return view('front.expert', [
-                'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
-                'showRegisterButton' => !auth()->check() && $this->predictionRepo->hasTeaserPredictions()
-            ]);
+            $viewData['predictions'] = $this->predictionRepo->getUpcomingPredictions(!auth()->check());
+            $viewData['showRegisterButton'] = !auth()->check() && $this->predictionRepo->hasTeaserPredictions();
         }
+
+        return view('front.expert', $viewData);
     }
 
     public function league()
     {
+        $cmsPage = CmsPage::where('name', 'Leagues')->first();
+
         return view('front.leagues', [
+            'cmsContent' => $cmsPage ? json_decode($cmsPage->content) : (object)[
+                'banner_title' => 'Leagues',
+                'meta_title' => 'Football Leagues Coverage',
+                'meta_description' => 'View all football leagues we cover for predictions'
+            ],
             'domesticLeagues' => $this->leagueRepo->getDomesticLeagues(),
-            'internationalLeagues' => $this->leagueRepo->getInternationalLeagues()
+            'internationalLeagues' => $this->leagueRepo->getInternationalLeagues(),
+            'meta_title' => $cmsPage->meta_title ?? 'Football Leagues Coverage',
+            'meta_description' => $cmsPage->meta_description ?? 'View all football leagues we cover for predictions'
+        ]);
+    }
+    public function pricing()
+    {
+        $cmsPage = CmsPage::where('name', 'Price')->first();
+
+        return view('front.pricing', [
+            'plans' => $this->planRepo->getAllOrderedByPrice(),
+            'cmsContent' => $cmsPage ? json_decode($cmsPage->content) : null,
+            'metaTitle' => $cmsPage->meta_title ?? 'Pricing',
+            'metaDescription' => $cmsPage->meta_description ?? 'View our membership plans'
         ]);
     }
 
-    public function pricing()
-    {
-        return view('front.pricing', [
-            'plans' => $this->planRepo->getAllOrderedByPrice()
-        ]);
-    }
 
     public function testimonials()
     {
-        return view('front.testimonials');
+        $cmsPage = CmsPage::where('slug', 'testimonials')->firstOrFail();
+        $testimonials = Testimonial::latest()->get();
+
+        $content = json_decode($cmsPage->content, true);
+
+        return view('front.testimonials', compact('cmsPage', 'content', 'testimonials'));
     }
+
+
 }

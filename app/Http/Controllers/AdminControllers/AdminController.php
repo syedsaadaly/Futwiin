@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\CmsPage;
 use App\Models\League;
 use App\Models\Plan;
 use App\Models\Pridection;
@@ -74,4 +75,7 @@ class AdminController extends Controller
             return response()->json(['status' => 'error', 'message' => $e->getMessage()], 400);
         }
     }
+
+    
+
 }

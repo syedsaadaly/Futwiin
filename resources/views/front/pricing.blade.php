@@ -3,24 +3,26 @@
 
 
 
-    <div class="inner-banner">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Pricing</h2>
-                </div>
+    <div class="inner-banner pricing-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ $cmsContent->banner_title ?? 'Pricing' }}</h2>
             </div>
         </div>
     </div>
+</div>
 
 
 
    <section class="membership pricing-membership">
         <div class="container">
-            <div class="member_head" data-aos="fade-up" data-duration="4000">
-                <h2 class="mainHead">Membership Plans</h2>
-                <p>Choose the plan that fits your needs and start winning with our expert soccer predictions.</p>
-            </div>
+            <div class="container">
+    <div class="pick-top text-center" data-aos="fade-up" data-duration="4000">
+        <h2 class="mainHead">{{ $cmsContent->main_heading ?? 'Membership Plans' }}</h2>
+        <p>{{ $cmsContent->main_paragraph ?? 'Choose the plan that fits your needs' }}</p>
+    </div>
+</div>
             <div class="row justify-content-center" data-aos="fade-up" data-duration="4000">
                 <div class="col-md-10">
                     <div class="row align-items-end justify-content-center">
