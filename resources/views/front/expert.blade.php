@@ -14,7 +14,7 @@
             z-index: 10;
             display: flex;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .live-dot {
@@ -28,9 +28,20 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .live-text {
@@ -56,7 +67,7 @@
             font-weight: bold;
             display: inline-flex;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .live-pulse-modal {
@@ -70,9 +81,20 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
     </style>
 @endsection
@@ -88,76 +110,83 @@
     </div>
 
 
-   <section class="pick-sec Expert-pick">
+    <section class="pick-sec Expert-pick">
         <div class="container">
             <div class="pick-top text-center" data-aos="fade-up" data-duration="4000">
-            <h2>{{ $cmsContent->main_heading ?? 'Todays Featured Picks' }}</h2>
+                <h2>{{ $cmsContent->main_heading ?? 'Todays Featured Picks' }}</h2>
 
-            <p>{{ $cmsContent->main_paragraph ?? 'Preview our expert predictions...' }}</p>
+                <p>{{ $cmsContent->main_paragraph ?? 'Preview our expert predictions...' }}</p>
 
-        </div>
+            </div>
             <div class="row justify-content-center" data-aos="fade-up" data-duration="4000">
                 @forelse($predictions as $prediction)
-                <div class="col-md-4">
-                    <div class="pick-wrapp">
-                        @if($prediction->isLive())
-                            <div class="live-badge">
-                                <span class="live-dot"></span>
-                                <span class="live-text">LIVE</span>
-                            </div>
-                        @endif
-                        <figure class="pick-imag">
-                            @if($prediction->getFirstMediaUrl('prediction_images'))
-                            <img src="{{ $prediction->getFirstMediaUrl('prediction_images') }}" class="img-fluid" alt="{{ $prediction->team1->name }} vs {{ $prediction->team2->name }}">
-                            @else
-                            <img src="{{ asset('front/images/default-pick.webp') }}" class="img-fluid" alt="Default prediction image">
+                    <div class="col-md-4">
+                        <div class="pick-wrapp">
+                            @if ($prediction->isLive())
+                                <div class="live-badge">
+                                    <span class="live-dot"></span>
+                                    <span class="live-text">LIVE</span>
+                                </div>
                             @endif
-                        </figure>
-                        <div class="pick-content">
-                            <ul class="pick-list">
-                                <li>
-                                    <a href="">
-                                        <span>{{ $prediction->league?->title ?? 'FIFA Club World Cup' }}</span>
-                                        {{ $prediction->match_date->format('M d') }}, {{ \Carbon\Carbon::parse($prediction->match_time)->format('g:i A') }} ({{ $prediction->getTimezoneAbbreviation() }})
-                                    </a>
-                                </li>
-                            </ul>
-                            <h3>{{ $prediction->team1->name }} vs. {{ $prediction->team2->name }}</h3>
-                            <div class="pick-center">
-                                <div class="pick-main">
-                                    <div class="pick-counter">
-                                        <h5>{{ substr($prediction->team1->name, 0, 2) }}</h5>
-                                        <span>{{ $prediction->team1->name }}</span>
-                                    </div>
-                                    <h6>vs</h6>
-                                    <div class="pick-counter">
-                                        <span>{{ $prediction->team2->name }}</span>
-                                        <h5>{{ substr($prediction->team2->name, 0, 2) }}</h5>
+                            <figure class="pick-imag">
+                                @if ($prediction->getFirstMediaUrl('prediction_images'))
+                                    <img src="{{ $prediction->getFirstMediaUrl('prediction_images') }}" class="img-fluid"
+                                        alt="{{ $prediction->team1->name }} vs {{ $prediction->team2->name }}">
+                                @else
+                                    <img src="{{ asset('front/images/default-pick.webp') }}" class="img-fluid"
+                                        alt="Default prediction image">
+                                @endif
+                            </figure>
+                            <div class="pick-content">
+                                <ul class="pick-list">
+                                    <li>
+                                        <a href="">
+                                            <span>{{ $prediction->league?->title ?? 'FIFA Club World Cup' }}</span>
+                                            {{ $prediction->match_date->format('M d') }},
+                                            {{ \Carbon\Carbon::parse($prediction->match_time)->format('g:i A') }}
+                                            ({{ $prediction->getTimezoneAbbreviation() }})
+                                        </a>
+                                    </li>
+                                </ul>
+                                <h3>{{ $prediction->team1->name }} vs. {{ $prediction->team2->name }}</h3>
+                                <div class="pick-center">
+                                    <div class="pick-main">
+                                        <div class="pick-counter">
+                                            <h5>{{ substr($prediction->team1->name, 0, 2) }}</h5>
+                                            <span>{{ $prediction->team1->name }}</span>
+                                        </div>
+                                        <h6>vs</h6>
+                                        <div class="pick-counter">
+                                            <span>{{ $prediction->team2->name }}</span>
+                                            <h5>{{ substr($prediction->team2->name, 0, 2) }}</h5>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <p>{{ Str::limit($prediction->teaser_text, 100 ?? '-') }}</p>
-                            <div class="pick-bottom">
-                                <a href="">82% Success Rate</a>
-                                @if(auth()->check())
-                                <a href="#" class="view-prediction" data-prediction-id="{{ $prediction->id }}">Full Analysis<i class="fal fa-long-arrow-right"></i></a>
-                                @else
-                                <a href="{{ route('login') }}">Login for Analysis<i class="fal fa-long-arrow-right"></i></a>
-                                @endif
+                                <p>{{ Str::limit($prediction->teaser_text, 100 ?? '-') }}</p>
+                                <div class="pick-bottom">
+                                    <a href="">82% Success Rate</a>
+                                    @if (auth()->check())
+                                        <a href="#" class="view-prediction"
+                                            data-prediction-id="{{ $prediction->id }}">Full Analysis<i
+                                                class="fal fa-long-arrow-right"></i></a>
+                                    @else
+                                        <a href="{{ route('login') }}">Login for Analysis<i
+                                                class="fal fa-long-arrow-right"></i></a>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 @empty
-                <div class="col-md-12 text-center">
-                    <p>No featured predictions available at the moment.</p>
-                </div>
+                    <div class="col-md-12 text-center">
+                        <p>No featured predictions available at the moment.</p>
+                    </div>
                 @endforelse
 
-                @if($showRegisterButton)
-                <div class="col-md-12 text-center">
-                    <a href="{{ route('register') }}" class="themeBtn">Access All Premium Picks</a>
-                </div>
+                @if ($showRegisterButton)
+                    <div class="col-md-12 text-center">
+                        <a href="{{ route('register') }}" class="themeBtn">Access All Premium Picks</a>
+                    </div>
                 @endif
             </div>
         </div>
@@ -170,7 +199,8 @@
                 <div class="col-md-12">
                     <div class="start">
                         <h2>Start Winning With Expert Soccer Predictions</h2>
-                        <p>Join thousands of members who have transformed their betting results with FutWin’s <br> premium analysis</p>
+                        <p>Join thousands of members who have transformed their betting results with FutWin’s <br> premium
+                            analysis</p>
                         <div class="btn-group">
                             <a href="#">Join FutWin Today</a>
                             <a href="#">Join FutWin Today</a>
@@ -205,41 +235,43 @@
     </div>
 @endsection
 @section('scripts')
-<script>
-$(document).ready(function() {
-    $('.view-prediction').click(function(e) {
-        e.preventDefault();
-        var predictionId = $(this).data('prediction-id');
+    <script>
+        $(document).ready(function() {
+            $('.view-prediction').click(function(e) {
+                e.preventDefault();
+                var predictionId = $(this).data('prediction-id');
 
-        $('#predictionModal').modal('show');
+                $('#predictionModal').modal('show');
 
-        $.ajax({
-            url: "{{ route('prediction.view', '') }}/" + predictionId,
-            type: "GET",
-            dataType: "json",
-            success: function(response) {
-                if (response.success) {
-                    $('#predictionModalBody').html(response.html);
-                } else {
-                    $('#predictionModalBody').html(
-                        '<div class="alert alert-danger">' +
-                        response.message +
-                        (response.redirect ? '<br><a href="' + response.redirect + '" class="btn btn-primary mt-2">Subscribe Now</a>' : '') +
-                        '</div>'
-                    );
-                }
-            },
-            error: function(xhr) {
-                var errorMessage = 'An error occurred while loading the prediction.';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                }
-                $('#predictionModalBody').html(
-                    '<div class="alert alert-danger">' + errorMessage + '</div>'
-                );
-            }
+                $.ajax({
+                    url: "{{ route('prediction.view', '') }}/" + predictionId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.success) {
+                            $('#predictionModalBody').html(response.html);
+                        } else {
+                            $('#predictionModalBody').html(
+                                '<div class="alert alert-danger">' +
+                                response.message +
+                                (response.redirect ? '<br><a href="' + response.redirect +
+                                    '" class="btn btn-primary mt-2">Subscribe Now</a>' : ''
+                                    ) +
+                                '</div>'
+                            );
+                        }
+                    },
+                    error: function(xhr) {
+                        var errorMessage = 'An error occurred while loading the prediction.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        $('#predictionModalBody').html(
+                            '<div class="alert alert-danger">' + errorMessage + '</div>'
+                        );
+                    }
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 @endsection

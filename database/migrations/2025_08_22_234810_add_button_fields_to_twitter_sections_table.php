@@ -8,17 +8,30 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('twitter_sections', function (Blueprint $table) {
-            $table->string('button_text')->nullable()->after('description');
-            $table->string('button_link')->nullable()->after('button_text');
-            $table->string('twitter_handle')->nullable()->after('button_link');
+            if (!Schema::hasColumn('twitter_sections', 'button_text')) {
+                $table->string('button_text')->nullable()->after('description');
+            }
+            if (!Schema::hasColumn('twitter_sections', 'button_link')) {
+                $table->string('button_link')->nullable()->after('button_text');
+            }
+            if (!Schema::hasColumn('twitter_sections', 'twitter_handle')) {
+                $table->string('twitter_handle')->nullable()->after('button_link');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('twitter_sections', function (Blueprint $table) {
-            $table->dropColumn(['button_text','button_link','twitter_handle']);
+            if (Schema::hasColumn('twitter_sections', 'button_text')) {
+                $table->dropColumn('button_text');
+            }
+            if (Schema::hasColumn('twitter_sections', 'button_link')) {
+                $table->dropColumn('button_link');
+            }
+            if (Schema::hasColumn('twitter_sections', 'twitter_handle')) {
+                $table->dropColumn('twitter_handle');
+            }
         });
     }
 };
-

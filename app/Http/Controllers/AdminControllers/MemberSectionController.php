@@ -3,56 +3,120 @@
 namespace App\Http\Controllers\AdminControllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\CmsPage;
 use App\Models\MemberPoint;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Models\MemberSection;
 
 class MemberSectionController extends Controller
 {
     public function edit()
     {
-        $cms = CmsPage::where('slug', 'members-section')->first();
-        $members = (object) ($cms ? json_decode($cms->content, true) : []);
+        $memberSection = CmsPage::firstOrCreate(
+            ['slug' => 'members-section'],
+            [
+                'name' => 'Members Section',
+                'meta_title' => 'Futwin Members',
+                'meta_description' => 'Why Our Members Win More',
+                'content' => [
+                    'page_title' => 'Why Our Members Win More',
+                    'points' => [],
+                ]
+            ]
+        );
+
+        $decodedContent = json_decode($memberSection->content, true);
 
         $points = MemberPoint::all();
 
-        return view('admin.cms.members-section', compact('members', 'points'));
+        // dd($decodedContent);
+
+        return view('admin.cms.members-section', compact('memberSection', 'decodedContent', 'points'));
     }
 
-   public function update(Request $request)
-{
-    $cms = CmsPage::where('slug', 'members-section')->firstOrFail();
+    public function update(Request $request, $slug)
+    {
+        // dd($request->all());
+        $memberSection = CmsPage::where('slug', $slug)->firstOrFail();
 
-    $data = $request->validate([
-        'title' => 'required|string',
-    ]);
+        $memberSection->update([
+            'content' => [
+                'page_title' => $request->title ?? $memberSection->content['page_title'] ?? '',
+                'points' => $request->points ?? $memberSection->content['points'] ?? [],
+            ],
+            'meta_title' => $request->meta_title ?? $memberSection->meta_title ?? '',
+            'meta_description' => $request->meta_description ?? $memberSection->meta_description ?? '',
+        ]);
 
-    // purani content me jo image hai usko preserve karna hoga
-    $old = json_decode($cms->content, true);
-    $data['image'] = $old['image'] ?? null;
+        if ($request->hasFile('image')) {
+            $memberSection->clearMediaCollection('image');
+            $memberSection->addMediaFromRequest('image')->toMediaCollection('image');
+        }
 
-    $cms->update([
-        'content' => json_encode($data),
-    ]);
-
-    return back()->with('success', 'Members Section updated successfully.');
-}
+        return back()->with('success', 'Members Section updated successfully.');
+    }
 
 
     public function storePoint(Request $request)
     {
-        $request->validate(['text' => 'required|string']);
-        MemberPoint::create($request->only('text'));
+        $point = MemberPoint::create([
+            'heading' => $request->text,
+        ]);
 
-        return back()->with('success', 'Point added.');
+        return redirect()->back()->with('success', 'Point added successfully!');
     }
+
+
+    //     public function update(Request $request)
+    // {
+    //     $memberSection = CmsPage::where('slug', 'members-section')->firstOrFail();
+
+    //     $memberSection->update([
+    //         'content' => [
+    //             'page_title' => $request->page_title,
+    //             'points' => $request->points ?? []
+    //         ],
+    //         'meta_title' => $request->meta_title,
+    //         'meta_description' => $request->meta_description
+    //     ]);
+
+    //     if ($request->hasFile('image')) {
+    //         $memberSection->clearMediaCollection('image');
+    //         $memberSection->addMedia($request->file('image'))->toMediaCollection('image');
+    //     }
+
+    //     return back()->with('success', 'Members Section updated successfully.');
+    // }
+
+
+    //     public function update(Request $request, $id)
+    //     {
+    //         $memberSection = CmsPage::findOrFail($id);
+
+    //         $memberSection->update([
+    //             'content' => [
+    //                 'page_title' => $request->page_title,
+    //                 'points' => $request->points ?? []
+    //             ],
+    //             'meta_title' => $request->meta_title,
+    //             'meta_description' => $request->meta_description
+    //         ]);
+
+    //         // Handle image upload via Spatie Media Library
+    //         if ($request->hasFile('image')) {
+    //             $memberSection->clearMediaCollection('image');
+    //             $memberSection->addMediaFromRequest('image')->toMediaCollection('image');
+    //         }
+
+    //         return redirect()->back()->with('success', 'Members Section updated successfully.');
+    //     }
 
     public function destroyPoint($id)
     {
-        $point = MemberPoint::findOrFail($id);
+        $point = MemberPoint::whereId($id);
+
         $point->delete();
 
-        return back()->with('success', 'Point deleted.');
+        return redirect()->back()->with('success', 'Point Delete successfully!');
     }
 }

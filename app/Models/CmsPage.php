@@ -32,5 +32,6 @@ class CmsPage extends Model implements HasMedia
     {
         return $q->where('slug', $slug);
     }
+    
 
 }

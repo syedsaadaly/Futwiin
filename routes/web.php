@@ -1,7 +1,5 @@
 <?php
 
-// use App\Http\Controllers\Admin\FeaturedPlayerController as AdminFeaturedPlayerController;
-
 use App\Http\Controllers\AdminControllers\FeaturedPlayerController;
 use App\Http\Controllers\AdminControllers\CmsPageController as AdminCmsPageController;
 use App\Http\Controllers\AdminControllers\AdminController;
@@ -16,12 +14,9 @@ use App\Http\Controllers\FrontendControllers\FrontendController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserControllers\UserController;
 use Illuminate\Support\Facades\Route;
-// use App\Http\Controllers\Front\TestimonialController;
 use App\Http\Controllers\AdminControllers\AdminTestimonialController;
-// use App\Http\Controllers\AdminControllers\CmsPageController;
 use App\Http\Controllers\AdminControllers\CmsPageController;
 use App\Http\Controllers\Frontend\CmsPageController as FrontendCmsPageController;
-
 use App\Http\Controllers\AdminControllers\HowItWorkController;
 use App\Http\Controllers\AdminControllers\TwitterPostController;
 use App\Http\Controllers\AdminControllers\HomeTestimonialController;
@@ -30,7 +25,7 @@ use App\Http\Controllers\AdminControllers\MemberSectionController;
 use App\Http\Controllers\AdminControllers\PageContentController;
 use App\Http\Controllers\AdminControllers\SayingController;
 use App\Http\Controllers\AdminControllers\TwitterController;
-
+use App\Http\Controllers\AdminControllers\SettingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -108,17 +103,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->namespace('admin')->
         Route::post('/update', [ProfileController::class, 'update'])->name('update');
     });
 
-    Route::prefix('cms')->group(function() {
-    Route::get('/testimonials', [AdminTestimonialController::class, 'index'])->name('admin.cms.testimonials.index');
-    Route::get('/testimonials/create', [AdminTestimonialController::class, 'create'])->name('admin.cms.testimonials.create');
-    Route::post('/testimonials/store', [AdminTestimonialController::class, 'store'])->name('admin.cms.testimonials.store');
-    Route::get('/testimonials/edit/{id}', [AdminTestimonialController::class, 'edit'])->name('admin.cms.testimonials.edit');
-    Route::put('/testimonials/update/{id}', [AdminTestimonialController::class, 'update'])->name('admin.cms.testimonials.update');
-   Route::delete('/testimonials/delete/{testimonial}', [AdminTestimonialController::class, 'destroy'])
-    ->name('admin.cms.testimonials.destroy');
-
-});
-
+    Route::prefix('cms')->group(function () {
+        Route::get('/testimonials', [AdminTestimonialController::class, 'index'])->name('admin.cms.testimonials.index');
+        Route::get('/testimonials/create', [AdminTestimonialController::class, 'create'])->name('admin.cms.testimonials.create');
+        Route::post('/testimonials/store', [AdminTestimonialController::class, 'store'])->name('admin.cms.testimonials.store');
+        Route::get('/testimonials/edit/{id}', [AdminTestimonialController::class, 'edit'])->name('admin.cms.testimonials.edit');
+        Route::put('/testimonials/update/{id}', [AdminTestimonialController::class, 'update'])->name('admin.cms.testimonials.update');
+        Route::delete('/testimonials/delete/{testimonial}', [AdminTestimonialController::class, 'destroy'])
+            ->name('admin.cms.testimonials.destroy');
+    });
 });
 Route::middleware(['auth'])->prefix('user')->namespace('user')->group(function () {
 
@@ -130,7 +123,7 @@ Route::middleware(['auth'])->prefix('user')->namespace('user')->group(function (
 });
 
 // rCMS ROUTES
-Route::prefix('admin')->name('admin.')->group(function() {
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('cms/testimonials/edit', [AdminCmsPageController::class,  'editTestimonialsPage'])->name('cms.testimonials.editPage');
     Route::put('cms/testimonials/update', [AdminCmsPageController::class, 'updateTestimonialsPage'])->name('cms.testimonials.updatePage');
 
@@ -140,25 +133,18 @@ Route::prefix('admin')->name('admin.')->group(function() {
     Route::get('/leagues/edit', [AdminCmsPageController::class, 'editLeagues'])->name('cms.leagues.edit');
     Route::put('/leagues/update', [AdminCmsPageController::class, 'updateLeagues'])->name('cms.leagues.update');
 
-       Route::get('/expert-picks/edit', [CmsPageController::class, 'editExpertPicks'])->name('cms.expert-picks.edit');
+    Route::get('/expert-picks/edit', [CmsPageController::class, 'editExpertPicks'])->name('cms.expert-picks.edit');
     Route::put('/expert-picks/update', [CmsPageController::class, 'updateExpertPicks'])->name('cms.expert-picks.update');
-
 });
-// Admin Featured Players CRUD
+
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    // Featured Players
-// Featured Players CRUD
+
     Route::get('featured-players', [FeaturedPlayerController::class, 'index'])->name('featured-players.index');
     Route::get('featured-players/create', [FeaturedPlayerController::class, 'create'])->name('featured-players.create');
     Route::post('featured-players', [FeaturedPlayerController::class, 'store'])->name('featured-players.store');
     Route::get('featured-players/{player}/edit', [FeaturedPlayerController::class, 'edit'])->name('featured-players.edit');
-Route::put('featured-players/{player}', [FeaturedPlayerController::class, 'update'])->name('featured-players.update');
-Route::delete('featured-players/{player}', [FeaturedPlayerController::class, 'destroy'])->name('featured-players.destroy');
-
-    // Route::get('featured-players/{id}/edit', [FeaturedPlayerController::class, 'edit'])->name('featured-players.edit');
-    // Route::put('featured-players/{player}', [FeaturedPlayerController::class, 'update'])->name('featured-players.update');
-    // Route::delete('featured-players/{id}', [FeaturedPlayerController::class, 'destroy'])->name('featured-players.destroy');
-
+    Route::put('featured-players/{player}', [FeaturedPlayerController::class, 'update'])->name('featured-players.update');
+    Route::delete('featured-players/{player}', [FeaturedPlayerController::class, 'destroy'])->name('featured-players.destroy');
 
     // How It Works
     Route::resource('how-it-works', HowItWorksController::class)->names([
@@ -197,7 +183,9 @@ Route::get('cms-page/success-stories/edit', [CmsPageController::class, 'successS
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('cms/members-section', [MemberSectionController::class, 'edit'])->name('cms.members-section.edit');
-    Route::put('cms/members-section', [MemberSectionController::class, 'update'])->name('cms.members-section.update');
+    Route::put('cms/members-section/{slug}', [MemberSectionController::class, 'update'])->name('cms.members-section.update');
+    Route::post('admin/cms/members-section/point', [MemberSectionController::class, 'storePoint']);
+
 
     Route::post('cms/members-section/point', [MemberSectionController::class, 'storePoint'])->name('cms.members-section.storePoint');
     Route::delete('cms/members-section/point/{id}', [MemberSectionController::class, 'destroyPoint'])->name('cms.members-section.destroyPoint');
@@ -221,3 +209,8 @@ Route::put('cms/saying', [CmsPageController::class, 'sayingUpdate'])->name('cms.
 
 // CRUD (cards)
 Route::resource('admin/saying', SayingController::class, ['as' => 'admin']);
+
+Route::prefix('admin')->group(function () {
+    Route::get('/cms/settings', [SettingController::class, 'show'])->name('admin.settings.show');
+    Route::post('/cms/settings/update', [SettingController::class, 'update'])->name('admin.settings.update');
+});

@@ -90,7 +90,7 @@
                             </li>
                         </ul>
                     </li>
- <li class="nav-item has-treeview">
+                    <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-home"></i>
                             <p>
@@ -99,7 +99,6 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            {{-- ✅ New Home Banner CMS --}}
                             <li class="nav-item">
                                 <a href="{{ route('cms.home-banner.edit') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -112,12 +111,6 @@
                                     <p>Featured Picks</p>
                                 </a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a href="{{ route('cms.featured-players.edit') }}" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Featured Players</p>
-                                </a>
-                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ route('admin.featured-players.index') }}" class="nav-link">
                                     <i class="far fa-circle nav-icon"></i>
@@ -169,6 +162,14 @@
                                     <p> Sayings CRUD </p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.settings.show') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Settings</p>
+                                </a>
+                            </li>
+
+
 
                         </ul>
                     </li>
@@ -205,9 +206,3 @@
                 </ul>
             </nav>
         </div>
-        <!-- <div class="d-flex justify-content-center sidebar-scroll-to-top m-2">
-         <svg xmlns="http://www.w3.org/2000/svg"  version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="20   " height="20   " x="0" y="0" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g><path d="m270.9 437.6 166-166c13.2-13.2 3.9-35.9-14.9-35.9h-48.9c-5.6 0-10.9 2.2-14.9 6.2L256 344.1 153.8 241.9c-3.9-3.9-9.3-6.2-14.9-6.2H90c-18.7 0-28.1 22.6-14.9 35.9l166 166c8.3 8.2 21.5 8.2 29.8 0zm0-167.5 166-166c13.2-13.2 3.9-35.9-14.9-35.9h-48.9c-5.6 0-10.9 2.2-14.9 6.2L256 176.6 153.8 74.4c-3.9-4-9.3-6.2-14.9-6.2H90c-18.7 0-28.1 22.6-14.9 35.9l166 166c8.3 8.2 21.5 8.2 29.8 0z" fill="#ffffff" opacity="1" data-original="#000000" class=""></path></g></svg>
-
-</div> -->
-    </div>
-</aside>

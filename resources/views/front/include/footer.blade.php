@@ -5,13 +5,17 @@
 
             <div class="col-md-3">
                 <div class="logo_content">
-                    <a href="#" class="footerLogo">FutWin</a>
-                    <p>Expert soccer betting predictions <br> from the Top 5 European leagues.</p>
+                    <a href="#" class="footerLogo">{{ $global_settings['footer_logo_text'] ?? '' }}</a>
+                    <p>{{ $global_settings['footer_paragraph'] ?? '' }}</p>
                     <ul class="social-link">
-                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                        <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+                        <li><a href="{{ $global_settings['twitter_link'] ?? '#' }}"><i class="fab fa-twitter"></i></a>
+                        </li>
+                        <li><a href="{{ $global_settings['facebook_link'] ?? '#' }}"><i
+                                    class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="{{ $global_settings['instagram_link'] ?? '#' }}"><i
+                                    class="fab fa-instagram"></i></a></li>
+                        <li><a href="{{ $global_settings['youtube_link'] ?? '#' }}"><i class="fab fa-youtube"></i></a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -48,8 +52,11 @@
         </div>
         <div class="row copyRight justify-content-center align-items-center">
             <div class="col-md-12">
-                <p>&copy; <span id="currentyear"><?= date("Y") ?></span>FutWin. All Right Reserved.</p>
-                <p>FutWin is an informational service. We do not provide gambling services or accept bets. Please bet responsibly.</p>
+                <p>
+                    &copy; <span id="currentyear">{{ date('Y') }}</span> FutWin.
+                    {{ $global_settings['footer_copyright'] ?? '' }}
+                </p>
+                <p>{{ $global_settings['footer_disclaimer'] ?? '' }}</p>
             </div>
         </div>
     </div>
@@ -67,19 +74,19 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 @yield('scripts')
 <script>
-    @if(session('success'))
+    @if (session('success'))
         toastr.success("{{ session('success') }}");
     @endif
 
-    @if(session('error'))
+    @if (session('error'))
         toastr.error("{{ session('error') }}");
     @endif
 
-    @if(session('info'))
+    @if (session('info'))
         toastr.info("{{ session('info') }}");
     @endif
 
-    @if(session('warning'))
+    @if (session('warning'))
         toastr.warning("{{ session('warning') }}");
     @endif
 </script>

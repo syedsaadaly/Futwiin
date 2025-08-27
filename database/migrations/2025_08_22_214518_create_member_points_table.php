@@ -10,9 +10,9 @@ class CreateMemberPointsTable extends Migration
     {
         Schema::create('member_points', function (Blueprint $table) {
             $table->id();
-            $table->string('heading')->nullable(); // new field
-            $table->string('text'); // point text
-            $table->string('image')->nullable(); // new field for image
+            $table->string('heading')->nullable(); 
+            $table->string('text'); 
+            $table->string('image')->nullable(); 
             $table->timestamps();
         });
     }

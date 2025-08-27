@@ -266,7 +266,7 @@
                             <div class="player-main">
                                 <div class="player-wrapp">
                                     <figure class="player-imag">
-                                        <img src="{{ asset('storage/' . $player->image) }}" class="img-fluid"
+                                        <img src="{{ $player->getFirstMediaUrl('featured-players') }}" class="img-fluid"
                                             alt="{{ $player->name }}">
                                     </figure>
                                     <ul class="player-list">
@@ -324,7 +324,7 @@
         </div>
     </section>
 
-    <section class="member-sec">
+    {{-- <section class="member-sec">
         <div class="container">
             <div class="member-overlay" data-aos="fade-up" data-duration="4000">
                 <div class="row align-items-center">
@@ -339,7 +339,7 @@
                                         @endif
                                         {{ $point->text }}
                                         @if ($point->image)
-                                            <img src="{{ asset('storage/' . $point->image) }}"
+                                            <img src="{{ $point->getFirstMediaUrl('image') }}"
                                                 alt="{{ $point->heading ?? 'Point Image' }}" width="50">
                                         @endif
                                     </li>
@@ -349,7 +349,7 @@
                     </div>
                     <div class="col-md-6" data-aos="fade-left" data-duration="4000">
                         <figure class="member-img">
-                            <img src="{{ !empty($members->image) ? asset('storage/' . $members->image) : asset('front/images/default-member.webp') }}"
+                            <img src="{{ $point->getFirstMediaUrl('members-section') }}"
                                 alt="Members Section Image" class="img-fluid">
                         </figure>
 
@@ -357,7 +357,37 @@
                 </div>
             </div>
         </div>
+    </section> --}}
+    <section class="member-sec">
+        <div class="container">
+            <div class="member-overlay" data-aos="fade-up" data-duration="4000">
+                <div class="row align-items-center">
+                    <div class="col-md-6" data-aos="fade-right" data-duration="4000">
+                        <div class="member-content">
+                            <h3>{{ $decodedData['page_title'] ?? '' }}</h3>
+                            <ul class="member-list">
+                                @foreach ($memberPoints ?? [] as $point)
+                                    <li>
+                                        <i class="far fa-check-circle" style="color: #f6ae28;"></i>
+                                        {{ $point->heading ?? '' }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6" data-aos="fade-left" data-duration="4000">
+                        <figure class="member-img">
+                            <img src="{{ $members->getFirstMediaUrl('image') }}" alt="Members Section Image"
+                                class="img-fluid">
+
+                        </figure>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </section>
+
 
     <section class="footerball-sec">
         <div class="container">
@@ -672,12 +702,13 @@
             <div class="row" data-aos="fade-up" data-duration="4000">
                 <div class="col-md-12">
                     <div class="start">
-                        <h2>Start Winning With Expert Soccer Predictions</h2>
-                        <p>Join thousands of members who have transformed their betting results with FutWin’s <br> premium
-                            analysis</p>
+                        <h2>{{ $global_settings['section_heading'] }}</h2>
+                        <p>{{ $global_settings['section_paragraph'] }}</p>
                         <div class="btn-group">
-                            <a href="#">Join FutWin Today</a>
-                            <a href="#">Join FutWin Today</a>
+                            <a
+                                href="{{ $global_settings['section_btn_1_link'] }}">{{ $global_settings['section_btn_1_text'] }}</a>
+                            <a
+                                href="{{ $global_settings['section_btn_2_link'] }}">{{ $global_settings['section_btn_2_text'] }}</a>
                         </div>
                     </div>
                 </div>

@@ -41,19 +41,26 @@ class TwitterController extends Controller
 }
 
 
-    // Add new tweet item
-    public function storeItem(Request $request)
-    {
-        $section = TwitterSection::first();
-        $data = $request->validate([
-            'username' => 'required|string',
-            'handle' => 'required|string',
-            'content' => 'required|string',
+   public function storeItem(Request $request)
+{
+    $section = TwitterSection::first();
+    if (!$section) {
+        $section = TwitterSection::create([
+            'title' => 'Follow Us On Twitter',
+            'description' => 'We share teasers of our premium picks on Twitter. Follow us to stay updated and get a taste of our expert analysis.'
         ]);
-        $section->items()->create($data);
-
-        return back()->with('success','Tweet added successfully.');
     }
+
+    $data = $request->validate([
+        'username' => 'required|string',
+        'handle' => 'required|string',
+        'content' => 'required|string',
+    ]);
+
+    $section->items()->create($data);
+
+    return back()->with('success','Tweet added successfully.');
+}
 
     // Update existing tweet item
     public function updateItem(Request $request, $id)

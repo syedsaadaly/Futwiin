@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Testimonial;
 use App\Models\FeaturedPlayer;
 use App\Models\HowItWork;
+use App\Models\MemberPoint;
 use App\Models\TwitterSection;
 use App\Models\TwitterItem;
 
@@ -32,72 +33,73 @@ class FrontController extends Controller
         $this->predictionRepo = $predictionRepo;
         $this->planRepo = $planRepo;
     }
-public function index()
-{
-    // Home Banner
-    $homeBanner = CmsPage::where('slug', 'home-banner')->first();
-    $banner = (object) ($homeBanner ? json_decode($homeBanner->content, true) : []);
+    public function index()
+    {
+        // Home Banner
+        $homeBanner = CmsPage::where('slug', 'home-banner')->first();
+        $banner = (object) ($homeBanner ? json_decode($homeBanner->content, true) : []);
 
-    // Featured Picks
-    $featuredPicks = CmsPage::where('slug', 'featured-picks')->first();
-    $picks = (object) ($featuredPicks ? json_decode($featuredPicks->content, true) : []);
+        // Featured Picks
+        $featuredPicks = CmsPage::where('slug', 'featured-picks')->first();
+        $picks = (object) ($featuredPicks ? json_decode($featuredPicks->content, true) : []);
 
-    // Featured Players CMS Section
-    $players = CmsPage::where('slug', 'featured-players')->first();
-    $players = (object) ($players ? json_decode($players->content, true) : []);
+        // Featured Players CMS Section
+        $players = CmsPage::where('slug', 'featured-players')->first();
+        $players = (object) ($players ? json_decode($players->content, true) : []);
 
-    // Featured Players List from DB
-    $playersList = FeaturedPlayer::all();
-    $howItWork = HowItWork::all();
+        // Featured Players List from DB
+        $playersList = FeaturedPlayer::all();
+        $howItWork = HowItWork::all();
 
-        // How It Works Section
-    // $howItWorks = CmsPage::where('slug', 'how-it-works')->first();
-    // $howItWorks = (object) ($howItWorks ? json_decode($howItWorks->content, true) : []);
-    // $howItWorksItems = \App\Models\HowItWorks::all();
-    $howItWorks = CmsPage::where('slug', 'how-it-works')->first();
-$howItWorks = (object) ($howItWorks ? json_decode($howItWorks->content, true) : []);
-$howItWorksItems = \App\Models\HowItWork::all(); // DB se items fetch
-    
+        $howItWorks = CmsPage::where('slug', 'how-it-works')->first();
+        $howItWorks = (object) ($howItWorks ? json_decode($howItWorks->content, true) : []);
+        $howItWorksItems = \App\Models\HowItWork::all(); // DB se items fetch
 
-    // Twitter Section CMS
-   $twitterSection = TwitterSection::first();
-    $twitterItems = $twitterSection ? $twitterSection->items : collect();
+        // Twitter Section CMS
+        $twitterSection = TwitterSection::first();
+        $twitterItems = $twitterSection ? $twitterSection->items : collect();
 
-      // Members Section
-    $members = CmsPage::where('slug', 'members-section')->first();
-    $members = (object) ($members ? json_decode($members->content, true) : []);
-    $memberPoints = \App\Models\MemberPoint::all();
+        // Members Section
+        $members = CmsPage::where('slug', 'members-section')->first();
+        $decodedData = json_decode($members->content, true);
+        
+        
+        $membersContent = (object) ($members ? json_decode($members->content, true) : []);
+        $memberPoints = MemberPoint::all();
+       
 
-    $sayingCms = CmsPage::where('slug', 'saying')->first();
-$sayingCms = (object) ($sayingCms ? json_decode($sayingCms->content, true) : []);
+        $sayingCms = CmsPage::where('slug', 'saying')->first();
+        $sayingCms = (object) ($sayingCms ? json_decode($sayingCms->content, true) : []);
 
-// Saying cards from DB
-$sayingList = \App\Models\Saying::all();
+        // Saying cards from DB
+        $sayingList = \App\Models\Saying::all();
 
-    $successStories = CmsPage::where('slug', 'success-stories')->first();
-$successStories = (object) ($successStories ? json_decode($successStories->content, true) : []);
+        $successStories = CmsPage::where('slug', 'success-stories')->first();
+        $successStories = (object) ($successStories ? json_decode($successStories->content, true) : []);
 
-    return view('front.index', [
-        'domesticLeagues' => $this->leagueRepo->getDomesticLeagues(),
-        'internationalLeagues' => $this->leagueRepo->getInternationalLeagues(),
-        'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
-        'plans' => $this->planRepo->getAllOrderedByPrice(),
-        'banner' => $banner,
-        'picks' => $picks,
-        'players' => $players,
-        'playersList' => $playersList, 
-        // 'howItWorksItems' => $howItWork,
-        'howItWorks' => $howItWorks,
-    'howItWorksItems' => $howItWorksItems,
-        'members' => $members,
-        'memberPoints' => $memberPoints,
-        'twitterSection' => $twitterSection,
-        'twitterItems' => $twitterItems,
-        'sayingCms' => $sayingCms,
-    'sayingList' => $sayingList,
-        'successStories' => $successStories,
-    ]);
-}
+        return view('front.index', [
+            'domesticLeagues' => $this->leagueRepo->getDomesticLeagues(),
+            'internationalLeagues' => $this->leagueRepo->getInternationalLeagues(),
+            'predictions' => $this->predictionRepo->getUpcomingPredictions(!auth()->check()),
+            'plans' => $this->planRepo->getAllOrderedByPrice(),
+            'banner' => $banner,
+            'picks' => $picks,
+            'players' => $players,
+            'playersList' => $playersList,
+            // 'howItWorksItems' => $howItWork,
+            'howItWorks' => $howItWorks,
+            'howItWorksItems' => $howItWorksItems,
+            'members' => $members,
+            'memberPoints' => $memberPoints,
+            'twitterSection' => $twitterSection,
+            'twitterItems' => $twitterItems,
+            'sayingCms' => $sayingCms,
+            'sayingList' => $sayingList,
+            'successStories' => $successStories,
+            'membersContent' => $membersContent,
+            'decodedData' => $decodedData
+        ]);
+    }
 
 
     // public function expert($id = null)
@@ -180,6 +182,4 @@ $successStories = (object) ($successStories ? json_decode($successStories->conte
 
         return view('front.testimonials', compact('cmsPage', 'content', 'testimonials'));
     }
-
-
 }

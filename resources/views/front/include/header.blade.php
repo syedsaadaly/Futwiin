@@ -16,6 +16,7 @@
     <!-- RESPONSIVE STYLESHEET -->
     <link rel="stylesheet" href="{{ asset('front/css/responsive.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+<link rel="icon" href="{{ $global_settings['fav_icon'] ?? asset('front/images/default.png') }}" type="image/png">
 
     <title>FutWin</title>
 </head>

@@ -33,11 +33,12 @@ class FeaturedPlayerController extends Controller
             'image' => 'nullable|image|max:2048',
         ]);
 
-        if($request->hasFile('image')){
-            $data['image'] = $request->file('image')->store('players','public');
-        }
+        $player = FeaturedPlayer::create($data);
 
-        FeaturedPlayer::create($data);
+        if($request->hasFile('image')){
+            $player->addMediaFromRequest('image')
+                ->toMediaCollection('featured-players');
+        }
 
         return redirect()->route('admin.featured-players.index')->with('success','Player added successfully');
     }
@@ -59,15 +60,14 @@ class FeaturedPlayerController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
         ]);
+        $player->update($data);
 
         if($request->hasFile('image')){
-            if($player->image){
-                Storage::disk('public')->delete($player->image);
-            }
-            $data['image'] = $request->file('image')->store('players','public');
+            $player->clearMediaCollection('featured-players');
+            
+            $player->addMediaFromRequest('image')
+                ->toMediaCollection('featured-players');
         }
-
-        $player->update($data);
 
         return redirect()->route('admin.featured-players.index')->with('success','Player updated successfully');
     }
@@ -80,22 +80,5 @@ public function destroy(FeaturedPlayer $player)
 
     return redirect()->route('admin.featured-players.index')->with('success', 'Player deleted successfully');
 }
-
-    // public function destroy(Request $request)
-    // {
-
-    
-    //     $player = FeaturedPlayer::find();
-
-    //     if($player->image){
-    //         Storage::disk('public')->delete($player->image);
-    //     }
-
-    //     $player->delete();
-
-    //     dd($player);
-
-    //     return redirect()->route('admin.featured-players.index')->with('success','Player deleted successfully');
-    // }
     
 }
